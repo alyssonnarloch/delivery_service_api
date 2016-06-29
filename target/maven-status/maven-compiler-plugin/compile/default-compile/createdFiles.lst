@@ -1,0 +1,17 @@
+model\Client.class
+model\ServiceProviderPortfolio.class
+model\ProjectPortfolio.class
+model\ClientServiceProviderEvaluation.class
+model\ServiceProviderOccupationArea.class
+com\api\delivery_service_api\resource\ServiceTypeResource.class
+model\ServiceType.class
+com\api\delivery_service_api\hibernate\HibernateUtil.class
+model\State.class
+model\ProjectStatus.class
+model\Project.class
+model\City.class
+model\ServiceProviderFavorite.class
+model\ServiceProvider.class
+com\api\delivery_service_api\resource\RestConfig.class
+model\User.class
+model\ServiceProviderServiceType.class
