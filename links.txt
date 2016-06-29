@@ -1,0 +1,12 @@
+Autenticação
+	http://andrebaltieri.net/blog/autenticacao-em-apis-no-asp-net-core/
+
+Retrofit
+	https://futurestud.io/blog/retrofit-getting-started-and-android-client
+
+	http://square.github.io/retrofit/
+	https://github.com/codepath/android_guides/wiki/Consuming-APIs-with-Retrofit
+	
+	Autenticação
+		https://futurestud.io/blog/oauth-2-on-android-with-retrofit
+
