@@ -10,3 +10,6 @@ Retrofit
 	Autenticação
 		https://futurestud.io/blog/oauth-2-on-android-with-retrofit
 
+Token
+	https://bitbucket.org/b_c/jose4j/wiki/JWS%20Examples
+	http://blakesmith.me/2010/02/08/understanding-public-key-private-key-concepts.html

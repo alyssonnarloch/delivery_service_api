@@ -5,6 +5,7 @@
  */
 package com.api.delivery_service_api.resource;
 
+import com.api.delivery_service_api.auth.Token;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -29,29 +30,30 @@ public class ServiceTypeResource {
     @Context
     private UriInfo context;
 
-    /**
-     * Creates a new instance of ServiceTypeResource
-     */
     public ServiceTypeResource() {
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getJson() {
-        SessionFactory sf = HibernateUtil.getSessionFactory();
-        Session s = sf.openSession();
-        Transaction t = s.beginTransaction();
-        
+    public String getJson() {
+//        SessionFactory sf = HibernateUtil.getSessionFactory();
+//        Session s = sf.openSession();
+//        Transaction t = s.beginTransaction();
+//        
         ServiceType type = new ServiceType();
-        //type.setName("Encanador");
-        
-        //s.save(type);
-        
-        t.commit();
-        
-        s.flush();
-        s.close();
+//        //type.setName("Encanador");
+//        
+//        //s.save(type);
+//        
+//        t.commit();
+//        
+//        s.flush();
+//        s.close();
 
-        return Response.ok(type).build();
+        
+        Token token = new Token();
+        return token.generate();
+        
+        //return Response.ok(type).build();
     }
 }

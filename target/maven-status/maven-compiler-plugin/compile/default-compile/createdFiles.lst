@@ -1,5 +1,6 @@
 model\Client.class
 model\ServiceProviderPortfolio.class
+com\api\delivery_service_api\auth\Token.class
 model\ProjectPortfolio.class
 model\ClientServiceProviderEvaluation.class
 model\ServiceProviderOccupationArea.class
