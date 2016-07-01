@@ -1,6 +1,6 @@
 Autenticação
 	http://andrebaltieri.net/blog/autenticacao-em-apis-no-asp-net-core/
-
+	https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java
 Retrofit
 	https://futurestud.io/blog/retrofit-getting-started-and-android-client
 
@@ -14,3 +14,4 @@ Token
 	https://bitbucket.org/b_c/jose4j/wiki/JWS%20Examples
 	http://blakesmith.me/2010/02/08/understanding-public-key-private-key-concepts.html
 	http://www.massapi.com/class/org/jose4j/jwk/RsaJsonWebKey.html
+	https://bitbucket.org/b_c/jose4j/issues/34/distributing-keys
