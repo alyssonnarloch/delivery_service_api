@@ -1,7 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -44,11 +43,8 @@ public class User implements Serializable {
     @Transient
     private String passwordConfirm;
 
-    @Column(length = 800)
+    @Transient
     private String token;
-
-    @Column(name = "expires_at", columnDefinition = "DATETIME")
-    private Date expiresAt;
 
     public User() {
     }
@@ -147,14 +143,6 @@ public class User implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public Date getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(Date expiresAt) {
-        this.expiresAt = expiresAt;
     }
 
 }

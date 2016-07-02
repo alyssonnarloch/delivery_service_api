@@ -3,7 +3,7 @@ package com.api.delivery_service_api.resource;
 import java.util.Set;
 import javax.ws.rs.core.Application;
 
-@javax.ws.rs.ApplicationPath("webresources")
+@javax.ws.rs.ApplicationPath("api")
 public class RestConfig extends Application {
 
     @Override
@@ -20,6 +20,7 @@ public class RestConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(com.api.delivery_service_api.resource.AuthResource.class);
         resources.add(com.api.delivery_service_api.resource.ServiceTypeResource.class);
     }
     

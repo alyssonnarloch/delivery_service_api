@@ -52,7 +52,9 @@ public class ServiceTypeResource {
 
         
         Token token = new Token();
-        return token.generate();
+        //String value = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6ImFseXNzb24gbG9rbyIsInBhc3N3b3JkIjoiMTIzNDU2Nzg5MTAiLCJleHBpcmVUaW1lIjo4MDUyNH0.0ZPAIaYyThO_xNNqn4QMMBjh5D9r62rOB_FdLTCznXkKaoUw7uOyOmkHNkf5TPmbWD9NbIUvzLlMg9ePJqLquQ";
+        //return token.authenticate(value);
+        return token.generateForAuthentication("alysson.narloch@gmail.com", "152036");
         
         //return Response.ok(type).build();
     }

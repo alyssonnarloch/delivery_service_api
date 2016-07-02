@@ -1,6 +1,7 @@
 Autenticação
 	http://andrebaltieri.net/blog/autenticacao-em-apis-no-asp-net-core/
 	https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java
+
 Retrofit
 	https://futurestud.io/blog/retrofit-getting-started-and-android-client
 
@@ -15,3 +16,11 @@ Token
 	http://blakesmith.me/2010/02/08/understanding-public-key-private-key-concepts.html
 	http://www.massapi.com/class/org/jose4j/jwk/RsaJsonWebKey.html
 	https://bitbucket.org/b_c/jose4j/issues/34/distributing-keys
+
+Opções JWT
+	http://www.programcreek.com/java-api-examples/index.php?api=io.jsonwebtoken.Jwts
+
+http://www.programcreek.com/java-api-examples/index.php?api=io.jsonwebtoken.Jwts
+http://www.programcreek.com/java-api-examples/index.php?source_dir=spring-security-jwt-master/src/main/java/com/technicalrex/springsecurityjwt/auth/jwt/TokenHandler.java
+http://www.programcreek.com/java-api-examples/index.php?source_dir=spark-jwt-auth-master/src/main/java/Validation/TokenValidator.java
+http://www.programcreek.com/java-api-examples/index.php?source_dir=spark-jwt-auth-master/src/main/java/Service/JwtTokenServiceImpl.java

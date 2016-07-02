@@ -3,6 +3,7 @@ D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_a
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\RestConfig.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceProvider.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceProviderServiceType.java
+D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\auth\Config.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ClientServiceProviderEvaluation.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceType.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\Client.java
@@ -10,6 +11,8 @@ D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_a
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\City.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\auth\Token.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceProviderFavorite.java
+D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\AuthResource.java
+D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\extras\Extra.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceProviderPortfolio.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\Project.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ProjectPortfolio.java

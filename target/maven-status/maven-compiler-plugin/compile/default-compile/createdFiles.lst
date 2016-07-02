@@ -1,7 +1,9 @@
 model\Client.class
 model\ServiceProviderPortfolio.class
+com\api\delivery_service_api\resource\AuthResource.class
 com\api\delivery_service_api\auth\Token.class
 model\ProjectPortfolio.class
+com\api\delivery_service_api\resource\AuthResource$1.class
 model\ClientServiceProviderEvaluation.class
 model\ServiceProviderOccupationArea.class
 com\api\delivery_service_api\resource\ServiceTypeResource.class
@@ -10,8 +12,10 @@ com\api\delivery_service_api\hibernate\HibernateUtil.class
 model\State.class
 model\ProjectStatus.class
 model\Project.class
+com\api\delivery_service_api\extras\Extra.class
 model\City.class
 model\ServiceProviderFavorite.class
+com\api\delivery_service_api\auth\Config.class
 model\ServiceProvider.class
 com\api\delivery_service_api\resource\RestConfig.class
 model\User.class
