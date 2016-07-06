@@ -6,18 +6,13 @@
 package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.auth.Token;
-import com.api.delivery_service_api.hibernate.HibernateUtil;
+import com.api.delivery_service_api.model.ServiceType;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import model.ServiceType;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 /**
  * REST Web Service

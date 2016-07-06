@@ -1,4 +1,4 @@
-package model;
+package com.api.delivery_service_api.model;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.apache.commons.validator.EmailValidator;
 
 @Entity
 @Table(name = "users")
@@ -39,9 +40,6 @@ public class User implements Serializable {
     private String profileImage;
 
     private String password;
-
-    @Transient
-    private String passwordConfirm;
 
     @Transient
     private String token;
@@ -129,14 +127,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
-
     public String getToken() {
         return token;
     }
@@ -145,4 +135,8 @@ public class User implements Serializable {
         this.token = token;
     }
 
+    public boolean validEmail() {
+        EmailValidator validator = EmailValidator.getInstance();
+        return validator.isValid(this.email);
+    }
 }

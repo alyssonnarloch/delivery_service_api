@@ -1,4 +1,4 @@
-package model;
+package com.api.delivery_service_api.model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;

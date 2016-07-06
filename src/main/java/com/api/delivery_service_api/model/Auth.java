@@ -1,7 +1,7 @@
 package com.api.delivery_service_api.model;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
-import model.User;
+import com.api.delivery_service_api.model.User;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

@@ -21,6 +21,7 @@ public class RestConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.api.delivery_service_api.resource.AuthResource.class);
+        resources.add(com.api.delivery_service_api.resource.ClientResource.class);
         resources.add(com.api.delivery_service_api.resource.ServiceTypeResource.class);
     }
     
