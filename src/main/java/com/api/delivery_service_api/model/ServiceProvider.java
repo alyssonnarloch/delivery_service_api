@@ -3,7 +3,6 @@ package com.api.delivery_service_api.model;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import com.api.delivery_service_api.model.User;
 
 @Entity
 @DiscriminatorValue("2")

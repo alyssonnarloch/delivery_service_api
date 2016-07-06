@@ -11,16 +11,20 @@ public class Client extends User {
     public Client() {
     }
 
-    public HashMap validate() {
+    public HashMap getErrors() {
 
         HashMap<String, String> errors = new HashMap();
         String emailError = "";
 
         if (!this.validEmail()) {
-            emailError += "Formato de e-mail inválido.";
+            emailError += "Formato de e-mail inválido./";
+        } else if (this.hasEmail()) {
+            emailError += "E-mail já cadastrado por outro usuário./";
         }
 
-        errors.put("email", emailError);
+        if (!emailError.equals("")) {
+            errors.put("email", emailError);
+        }
 
         return errors;
     }
