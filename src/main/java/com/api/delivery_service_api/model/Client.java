@@ -1,6 +1,9 @@
 package com.api.delivery_service_api.model;
 
+import com.google.common.base.Joiner;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -14,16 +17,17 @@ public class Client extends User {
     public HashMap getErrors() {
 
         HashMap<String, String> errors = new HashMap();
-        String emailError = "";
+        List<String> emailError = new ArrayList<>();
+        Joiner joiner = Joiner.on("/");
 
         if (!this.validEmail()) {
-            emailError += "Formato de e-mail inválido./";
+            emailError.add("Formato de e-mail inválido.");
         } else if (this.hasEmail()) {
-            emailError += "E-mail já cadastrado por outro usuário./";
+            emailError.add("E-mail já cadastrado por outro usuário.");
         }
-
-        if (!emailError.equals("")) {
-            errors.put("email", emailError);
+        
+        if (emailError.size() > 0) {
+            errors.put("email", joiner.join(emailError));
         }
 
         return errors;

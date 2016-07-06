@@ -2,6 +2,7 @@ package com.api.delivery_service_api.model;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -11,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import org.apache.commons.validator.EmailValidator;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -30,7 +30,7 @@ public class User implements Serializable {
     private String email;
     private String phone;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "city_id")
     private City city;
 
@@ -44,9 +44,6 @@ public class User implements Serializable {
     private String profileImage;
 
     private String password;
-
-    @Transient
-    private String token;
 
     public User() {
     }
@@ -129,14 +126,6 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public boolean validEmail() {
