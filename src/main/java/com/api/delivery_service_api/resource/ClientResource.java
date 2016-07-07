@@ -47,8 +47,7 @@ public class ClientResource {
         client.setPhone(phone);
         client.setZipCode(zipCode);
 
-        City city = new City();
-        city.setId(cityId);
+        City city = new City(cityId);
         client.setCity(city);
 
         client.setAddress(address);

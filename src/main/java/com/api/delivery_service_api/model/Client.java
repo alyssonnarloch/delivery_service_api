@@ -19,13 +19,15 @@ public class Client extends User {
         HashMap<String, String> errors = new HashMap();
         List<String> emailError = new ArrayList<>();
         Joiner joiner = Joiner.on("/");
-
-        if (!this.validEmail()) {
+        
+        if (this.getEmail() == null || this.getEmail().isEmpty()) {
+            emailError.add("E-mail deve ser informado.");
+        } else if (!this.validEmail()) {
             emailError.add("Formato de e-mail inválido.");
         } else if (this.hasEmail()) {
             emailError.add("E-mail já cadastrado por outro usuário.");
         }
-        
+
         if (emailError.size() > 0) {
             errors.put("email", joiner.join(emailError));
         }

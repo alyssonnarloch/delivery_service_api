@@ -18,6 +18,10 @@ public class ServiceType implements Serializable {
     public ServiceType() {
     }
 
+    public ServiceType(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
