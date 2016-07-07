@@ -2,6 +2,7 @@ package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
+import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.model.ServiceType;
 import com.api.delivery_service_api.model.ServiceProviderServiceType;
@@ -11,10 +12,12 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,6 +31,34 @@ public class ServiceProviderResource {
     private UriInfo context;
 
     public ServiceProviderResource() {
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getById(@PathParam("id") int id) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        try {
+            ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
+
+            if (serviceProvider == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Não existe prestador de serviço associado ao id " + id + ".").build();
+            }
+
+            serviceProvider.setPassword("**********************");
+
+            t.commit();
+            s.flush();
+            s.close();
+
+            return Response.ok(serviceProvider).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
     }
 
     @POST
@@ -97,7 +128,7 @@ public class ServiceProviderResource {
                 ServiceProviderOccupationArea serviceProviderOccupationArea = new ServiceProviderOccupationArea();
                 serviceProviderOccupationArea.setCity(cityOccupation);
                 serviceProviderOccupationArea.setServiceProivider(serviceProvider);
-                
+
                 s.save(serviceProviderOccupationArea);
             }
 
@@ -105,7 +136,7 @@ public class ServiceProviderResource {
                 ServiceProviderPortfolio serviceProviderPortfolio = new ServiceProviderPortfolio();
                 serviceProviderPortfolio.setImage(image);
                 serviceProviderPortfolio.setServiceProvider(serviceProvider);
-                
+
                 s.save(serviceProviderPortfolio);
             }
 
