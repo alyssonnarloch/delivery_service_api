@@ -73,12 +73,17 @@ public class ServiceProvider extends User {
 
         HashMap<String, String> errors = new HashMap();
 
+        List<String> nameError = new ArrayList<>();
         List<String> emailError = new ArrayList<>();
         List<String> servicesTypeError = new ArrayList<>();
         List<String> occupationAreasError = new ArrayList<>();
         List<String> profilePortfolioError = new ArrayList<>();
 
         Joiner joiner = Joiner.on("/");
+
+        if (this.getName() == null || this.getName().isEmpty()) {
+            nameError.add("Nome deve ser informado");
+        }
 
         if (this.getEmail() == null || this.getEmail().isEmpty()) {
             emailError.add("E-mail deve ser informado.");
@@ -100,6 +105,9 @@ public class ServiceProvider extends User {
             profilePortfolioError.add("Deve ser adicionada ao menos uma imagem ao portifólio.");
         }
 
+        if (nameError.size() > 0) {
+            errors.put("name", joiner.join(nameError));
+        }
         if (emailError.size() > 0) {
             errors.put("email", joiner.join(emailError));
         }
