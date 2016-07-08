@@ -2,6 +2,7 @@ package com.api.delivery_service_api.model;
 
 import com.google.common.base.Joiner;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.Column;
@@ -18,15 +19,27 @@ public class ServiceProvider extends User {
     private boolean available;
 
     @Transient
-    private List<Integer> servicesType;
+    private List<Integer> serviceTypeIds;
 
     @Transient
-    private List<Integer> occupationAreas;
+    private List<Integer> occupationAreaIds;
 
     @Transient
-    private List<String> profilePortfolio;
+    private List<String> profilePortfolioSrc;
+
+    @Transient
+    private List<ServiceType> serviceTypes;
+
+    @Transient
+    private List<City> occupationAreas;
+
+    @Transient
+    private List<ServiceProviderPortfolio> profilePortfolios;
 
     public ServiceProvider() {
+        this.serviceTypes = new ArrayList();
+        this.occupationAreas = new ArrayList();
+        this.profilePortfolios = new ArrayList();
     }
 
     public String getExperienceDescription() {
@@ -45,28 +58,59 @@ public class ServiceProvider extends User {
         this.available = available;
     }
 
-    public List<Integer> getServicesType() {
-        return servicesType;
+    public List<Integer> getServiceTypeIds() {
+        return serviceTypeIds;
     }
 
-    public void setServicesType(List<Integer> servicesType) {
-        this.servicesType = servicesType;
+    public void setServiceTypeIds(List<Integer> serviceTypeIds) {
+        serviceTypeIds.removeAll(Arrays.asList("", null));
+        this.serviceTypeIds = serviceTypeIds;
     }
 
-    public List<Integer> getOccupationAreas() {
+    public List<Integer> getOccupationAreaIds() {
+        occupationAreaIds.removeAll(Arrays.asList("", null));
+        return occupationAreaIds;
+    }
+
+    public void setOccupationAreaIds(List<Integer> occupationAreaIds) {
+        this.occupationAreaIds = occupationAreaIds;
+    }
+
+    public List<String> getProfilePortfolioSrc() {
+        return profilePortfolioSrc;
+    }
+
+    public void setProfilePortfolioSrc(List<String> profilePortfolioSrc) {
+        profilePortfolioSrc.removeAll(Arrays.asList("", null));
+        this.profilePortfolioSrc = profilePortfolioSrc;
+    }
+
+    public List<ServiceType> getServiceTypes() {
+        return serviceTypes;
+    }
+
+    public void setServiceTypes(List<ServiceType> serviceTypes) {
+        this.serviceTypes = serviceTypes;
+    }
+
+    public List<City> getOccupationAreas() {
         return occupationAreas;
     }
 
-    public void setOccupationAreas(List<Integer> occupationAreas) {
+    public void setOccupationAreas(List<City> occupationAreas) {
         this.occupationAreas = occupationAreas;
     }
 
-    public List<String> getProfilePortfolio() {
-        return profilePortfolio;
+    public List<ServiceProviderPortfolio> getProfilePortfolios() {
+        return profilePortfolios;
     }
 
-    public void setProfilePortfolio(List<String> profilePortfolio) {
-        this.profilePortfolio = profilePortfolio;
+    public void setProfilePortfolios(List<ServiceProviderPortfolio> profilePortfolios) {
+        this.profilePortfolios = profilePortfolios;
+    }
+    
+    public void addServiceType(ServiceType serviceType){
+        this.serviceTypes.add(serviceType);
     }
 
     public HashMap getErrors() {
@@ -75,9 +119,9 @@ public class ServiceProvider extends User {
 
         List<String> nameError = new ArrayList<>();
         List<String> emailError = new ArrayList<>();
-        List<String> servicesTypeError = new ArrayList<>();
-        List<String> occupationAreasError = new ArrayList<>();
-        List<String> profilePortfolioError = new ArrayList<>();
+        List<String> serviceTypeIdsError = new ArrayList<>();
+        List<String> occupationAreaIdsError = new ArrayList<>();
+        List<String> profilePortfolioSrcError = new ArrayList<>();
 
         Joiner joiner = Joiner.on("/");
 
@@ -93,16 +137,16 @@ public class ServiceProvider extends User {
             emailError.add("E-mail já cadastrado por outro usuário.");
         }
 
-        if (this.getServicesType().isEmpty()) {
-            servicesTypeError.add("Deve ser informado ao menos um tipo de serviço.");
+        if (this.getServiceTypeIds().isEmpty()) {
+            serviceTypeIdsError.add("Deve ser informado ao menos um tipo de serviço.");
         }
 
-        if (this.getOccupationAreas().isEmpty()) {
-            occupationAreasError.add("Deve ser informado ao menos uma área de atuação.");
+        if (this.getOccupationAreaIds().isEmpty()) {
+            occupationAreaIdsError.add("Deve ser informado ao menos uma área de atuação.");
         }
 
-        if (this.getProfilePortfolio().isEmpty()) {
-            profilePortfolioError.add("Deve ser adicionada ao menos uma imagem ao portifólio.");
+        if (this.getProfilePortfolioSrc().isEmpty()) {
+            profilePortfolioSrcError.add("Deve ser adicionada ao menos uma imagem ao portifólio.");
         }
 
         if (nameError.size() > 0) {
@@ -111,14 +155,14 @@ public class ServiceProvider extends User {
         if (emailError.size() > 0) {
             errors.put("email", joiner.join(emailError));
         }
-        if (servicesTypeError.size() > 0) {
-            errors.put("service_type", joiner.join(servicesTypeError));
+        if (serviceTypeIdsError.size() > 0) {
+            errors.put("service_type", joiner.join(serviceTypeIdsError));
         }
-        if (occupationAreasError.size() > 0) {
-            errors.put("occupation_area", joiner.join(occupationAreasError));
+        if (occupationAreaIdsError.size() > 0) {
+            errors.put("occupation_area", joiner.join(occupationAreaIdsError));
         }
-        if (profilePortfolioError.size() > 0) {
-            errors.put("profile_portfolio", joiner.join(profilePortfolioError));
+        if (profilePortfolioSrcError.size() > 0) {
+            errors.put("profile_portfolio", joiner.join(profilePortfolioSrcError));
         }
 
         return errors;

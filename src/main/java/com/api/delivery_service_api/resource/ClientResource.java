@@ -62,7 +62,7 @@ public class ClientResource {
             @FormParam("email") String email,
             @FormParam("phone") String phone,
             @FormParam("zipcode") int zipCode,
-            @FormParam("cityId") int cityId,
+            @FormParam("city_id") int cityId,
             @FormParam("address") String address,
             @FormParam("number") int number,
             @FormParam("password") String password,
@@ -95,14 +95,13 @@ public class ClientResource {
 
         try {
             s.save(client);
-
             t.commit();
-            s.flush();
-            s.close();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
         }
 
         return Response.ok(gson.toJson(errors)).build();

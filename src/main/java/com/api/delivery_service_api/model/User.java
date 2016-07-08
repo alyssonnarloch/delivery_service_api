@@ -2,7 +2,6 @@ package com.api.delivery_service_api.model;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -30,7 +29,7 @@ public class User implements Serializable {
     private String email;
     private String phone;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
 

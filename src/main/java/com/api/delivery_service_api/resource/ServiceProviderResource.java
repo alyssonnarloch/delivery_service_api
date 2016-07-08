@@ -21,6 +21,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -49,10 +50,19 @@ public class ServiceProviderResource {
 
             serviceProvider.setPassword("**********************");
 
+            Query queryServiceProviderServiceType = s.createQuery("FROM ServiceProviderServiceType WHERE service_provider_id = :service_provider_id");
+            queryServiceProviderServiceType.setInteger("service_provider_id", id);
+
+            List<ServiceProviderServiceType> serviceProviderServiceTypes = queryServiceProviderServiceType.list();
+
+            for (ServiceProviderServiceType serviceProviderServiceType : serviceProviderServiceTypes) {
+                serviceProvider.addServiceType(serviceProviderServiceType.getServiceType());
+            }
+
             t.commit();
             s.flush();
             s.close();
-
+            
             return Response.ok(serviceProvider).build();
         } catch (Exception ex) {
             t.rollback();
@@ -68,7 +78,7 @@ public class ServiceProviderResource {
             @FormParam("email") String email,
             @FormParam("phone") String phone,
             @FormParam("zipcode") int zipCode,
-            @FormParam("cityId") int cityId,
+            @FormParam("city_id") int cityId,
             @FormParam("address") String address,
             @FormParam("number") int number,
             @FormParam("password") String password,
@@ -94,11 +104,11 @@ public class ServiceProviderResource {
         serviceProvider.setNumber(number);
         serviceProvider.setPassword(password);
         serviceProvider.setProfileImage(profileImage);
-        serviceProvider.setServicesType(servicesType);
+        serviceProvider.setServiceTypeIds(servicesType);
         serviceProvider.setExperienceDescription(experienceDescription);
         serviceProvider.setAvailable(available);
-        serviceProvider.setOccupationAreas(occupationAreas);
-        serviceProvider.setProfilePortfolio(profilePortfolio);
+        serviceProvider.setOccupationAreaIds(occupationAreas);
+        serviceProvider.setProfilePortfolioSrc(profilePortfolio);
 
         HashMap<String, String> errors = serviceProvider.getErrors();
 
@@ -141,12 +151,12 @@ public class ServiceProviderResource {
             }
 
             t.commit();
-            s.flush();
-            s.close();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
         }
 
         return Response.ok(gson.toJson(errors)).build();
