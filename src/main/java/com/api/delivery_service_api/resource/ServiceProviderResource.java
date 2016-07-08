@@ -2,7 +2,6 @@ package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
-import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.model.ServiceType;
 import com.api.delivery_service_api.model.ServiceProviderServiceType;
@@ -19,12 +18,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 @Path("service_provider")
 public class ServiceProviderResource {
@@ -33,6 +35,45 @@ public class ServiceProviderResource {
     private UriInfo context;
 
     public ServiceProviderResource() {
+    }
+
+    @POST
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response search(@FormParam("name") String name,
+            @FormParam("service_type") List<Integer> serviceTypeIds,
+            @FormParam("city_id") int cityId,
+            @FormParam("available") boolean available,
+            @FormParam("qualification") int qualification) {
+
+        Gson gson = new Gson();
+        
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        try {
+            //Busca por nome ok
+            //Criteria criteria = s.createCriteria(ServiceProvider.class, "p");
+            //criteria.add(Restrictions.eq("p.name", name));
+//            criteria.createAlias("p.service_provider_service_types", "sp");
+//            criteria.add(Restrictions.in("sp.service_type_id", serviceTypeIds));
+
+            Criteria criteria = s.createCriteria(ServiceProvider.class, "p")
+                    .createAlias("cities", "c")
+                    .add(Restrictions.eq("p.c.name", "Curitiba"));
+            
+            List<ServiceProvider> serviceProviders = criteria.list();
+
+            t.commit();
+            s.flush();
+            s.close();
+
+            return Response.ok(gson.toJson(serviceProviders)).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
     }
 
     @GET
@@ -61,7 +102,7 @@ public class ServiceProviderResource {
             for (ServiceProviderServiceType serviceProviderServiceType : serviceProviderServiceTypes) {
                 serviceProvider.addServiceType(serviceProviderServiceType.getServiceType());
             }
-            
+
             Query queryOccupationArea = s.createQuery("FROM ServiceProviderOccupationArea WHERE service_provider_id = :service_provider_id");
             queryOccupationArea.setInteger("service_provider_id", id);
 
