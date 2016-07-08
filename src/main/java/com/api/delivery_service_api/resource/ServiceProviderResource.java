@@ -21,6 +21,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -39,6 +40,8 @@ public class ServiceProviderResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") int id) {
         Session s = HibernateUtil.getSessionFactory().openSession();
+        //Evita atualização automática das entidades
+        s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
         try {
@@ -58,11 +61,20 @@ public class ServiceProviderResource {
             for (ServiceProviderServiceType serviceProviderServiceType : serviceProviderServiceTypes) {
                 serviceProvider.addServiceType(serviceProviderServiceType.getServiceType());
             }
+            
+            Query queryOccupationArea = s.createQuery("FROM ServiceProviderOccupationArea WHERE service_provider_id = :service_provider_id");
+            queryOccupationArea.setInteger("service_provider_id", id);
+
+            List<ServiceProviderOccupationArea> serviceProviderOccupationAreas = queryOccupationArea.list();
+
+            for (ServiceProviderOccupationArea serviceProviderOccupationArea : serviceProviderOccupationAreas) {
+                serviceProvider.addOccupationArea(serviceProviderOccupationArea.getCity());
+            }
 
             t.commit();
             s.flush();
             s.close();
-            
+
             return Response.ok(serviceProvider).build();
         } catch (Exception ex) {
             t.rollback();

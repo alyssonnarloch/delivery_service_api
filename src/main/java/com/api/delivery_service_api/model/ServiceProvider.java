@@ -33,13 +33,12 @@ public class ServiceProvider extends User {
     @Transient
     private List<City> occupationAreas;
 
-    @Transient
-    private List<ServiceProviderPortfolio> profilePortfolios;
-
     public ServiceProvider() {
         this.serviceTypes = new ArrayList();
         this.occupationAreas = new ArrayList();
-        this.profilePortfolios = new ArrayList();
+        this.serviceTypeIds = new ArrayList();
+        this.occupationAreaIds = new ArrayList();
+        this.profilePortfolioSrc = new ArrayList();
     }
 
     public String getExperienceDescription() {
@@ -101,27 +100,23 @@ public class ServiceProvider extends User {
         this.occupationAreas = occupationAreas;
     }
 
-    public List<ServiceProviderPortfolio> getProfilePortfolios() {
-        return profilePortfolios;
+    public void addServiceType(ServiceType serviceType) {
+        this.serviceTypes.add(serviceType);
     }
 
-    public void setProfilePortfolios(List<ServiceProviderPortfolio> profilePortfolios) {
-        this.profilePortfolios = profilePortfolios;
-    }
-    
-    public void addServiceType(ServiceType serviceType){
-        this.serviceTypes.add(serviceType);
+    public void addOccupationArea(City city) {
+        this.occupationAreas.add(city);
     }
 
     public HashMap getErrors() {
 
         HashMap<String, String> errors = new HashMap();
 
-        List<String> nameError = new ArrayList<>();
-        List<String> emailError = new ArrayList<>();
-        List<String> serviceTypeIdsError = new ArrayList<>();
-        List<String> occupationAreaIdsError = new ArrayList<>();
-        List<String> profilePortfolioSrcError = new ArrayList<>();
+        List<String> nameError = new ArrayList();
+        List<String> emailError = new ArrayList();
+        List<String> serviceTypeIdsError = new ArrayList();
+        List<String> occupationAreaIdsError = new ArrayList();
+        List<String> profilePortfolioSrcError = new ArrayList();
 
         Joiner joiner = Joiner.on("/");
 
