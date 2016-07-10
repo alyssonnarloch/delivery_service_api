@@ -6,7 +6,7 @@ import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.model.ServiceProviderPortfolio;
 import com.api.delivery_service_api.model.ServiceType;
 import com.google.gson.Gson;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import javax.ws.rs.FormParam;
@@ -19,9 +19,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 
 @Path("service_provider")
 public class ServiceProviderResource {
@@ -38,26 +41,48 @@ public class ServiceProviderResource {
     public Response search(@FormParam("name") String name,
             @FormParam("service_type") List<Integer> serviceTypeIds,
             @FormParam("city_id") int cityId,
-            @FormParam("available") boolean available,
-            @FormParam("qualification") int qualification) {
+            @FormParam("available") boolean available) {
+
+        serviceTypeIds.removeAll(Arrays.asList("", null));
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-        Transaction t = s.beginTransaction();
+//        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
 
         try {
-            String hql = "FROM ServiceProvider sp LEFT JOIN sp.ServiceProviderServiceType spst";
+            Criteria criteria = s.createCriteria(ServiceProvider.class, "sp")
+                    .createAlias("servicesType", "st")
+                    .createAlias("occupationAreas", "oa");
 
-            List<ServiceProvider> serviceProviders = s.createQuery(hql).list();
+            if (name != null && !name.equals("")) {
+                criteria.add(Restrictions.like("sp.name", name, MatchMode.ANYWHERE));
+            }
 
-            t.commit();
+            if (!serviceTypeIds.isEmpty()) {
+                criteria.add(Restrictions.in("st.id", serviceTypeIds));
+            }
+
+            if (cityId > 0) {
+                criteria.add(Restrictions.eq("oa.id", cityId));
+            }
+
+            if (available) {
+                criteria.add(Restrictions.eq("sp.available", available));
+            }
+
+            List<ServiceProvider> serviceProviders = criteria.list();
+
+//            t.commit();
+            return Response.ok(gson.toJson(serviceProviders)).build();
+        } catch (Exception ex) {
+//            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
             s.flush();
             s.close();
 
-            return Response.ok(serviceProviders).build();
-        } catch (Exception ex) {
-            t.rollback();
-            ex.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
 
@@ -71,7 +96,7 @@ public class ServiceProviderResource {
         //Transaction t = s.beginTransaction();
 
         Gson gson = new Gson();
-        
+
         try {
             ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
 

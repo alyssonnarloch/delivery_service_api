@@ -4,34 +4,14 @@ import com.google.common.base.Joiner;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 
 @Entity
 @DiscriminatorValue("1")
 public class Client extends User {
 
-    @ManyToMany
-    @JoinTable(
-            name = "service_provider_favorites",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_provider_id"))
-    private List<ServiceProvider> servicesProviderFavorites;
-
     public Client() {
-        this.servicesProviderFavorites = new ArrayList();
-    }
-
-    public List<ServiceProvider> getServicesProviderFavorites() {
-        return servicesProviderFavorites;
-    }
-
-    public void setServicesProviderFavorites(List<ServiceProvider> servicesProviderFavorites) {
-        this.servicesProviderFavorites = servicesProviderFavorites;
     }
 
     public HashMap getErrors() {

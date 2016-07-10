@@ -50,6 +50,13 @@ public class ServiceProvider extends User {
     @JoinColumn(name = "service_provider_id")
     private List<ServiceProviderPortfolio> portfolio;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "service_provider_id")
+    private List<ServiceProviderEvaluation> evaluation;
+
+    @Transient
+    private int qualificationAvg;
+
     public ServiceProvider() {
         this.serviceTypeIds = new ArrayList();
         this.occupationAreaIds = new ArrayList();
@@ -73,6 +80,14 @@ public class ServiceProvider extends User {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public List<ServiceProviderEvaluation> getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(List<ServiceProviderEvaluation> evaluation) {
+        this.evaluation = evaluation;
     }
 
     public List<Integer> getServiceTypeIds() {
@@ -112,6 +127,14 @@ public class ServiceProvider extends User {
 
     public List<City> getOccupationAreas() {
         return occupationAreas;
+    }
+
+    public int getQualificationAvg() {
+        return qualificationAvg;
+    }
+
+    public void setQualificationAvg(int qualificationAvg) {
+        this.qualificationAvg = qualificationAvg;
     }
 
     public void setOccupationAreas(List<City> occupationAreas) {

@@ -10,8 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "client_service_provider_evaluations")
-public class ClientServiceProviderEvaluation implements Serializable {
+@Table(name = "service_provider_evaluations")
+public class ServiceProviderEvaluation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +20,10 @@ public class ClientServiceProviderEvaluation implements Serializable {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
-
-    @ManyToOne
-    @JoinColumn(name = "service_provider_id")
-    private ServiceProvider serviceProvider;
-    private int valuedProfileId;
     private int qualification;
     private String description;
 
-    public ClientServiceProviderEvaluation() {
+    public ServiceProviderEvaluation() {
     }
 
     public int getId() {
@@ -45,22 +40,6 @@ public class ClientServiceProviderEvaluation implements Serializable {
 
     public void setClient(Client client) {
         this.client = client;
-    }
-
-    public ServiceProvider getServiceProvider() {
-        return serviceProvider;
-    }
-
-    public void setServiceProvider(ServiceProvider serviceProvider) {
-        this.serviceProvider = serviceProvider;
-    }
-
-    public int getValuedProfileId() {
-        return valuedProfileId;
-    }
-
-    public void setValuedProfileId(int valuedProfileId) {
-        this.valuedProfileId = valuedProfileId;
     }
 
     public int getQualification() {
