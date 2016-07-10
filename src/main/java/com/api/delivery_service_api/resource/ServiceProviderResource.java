@@ -68,8 +68,10 @@ public class ServiceProviderResource {
         Session s = HibernateUtil.getSessionFactory().openSession();
         //Evita atualização automática das entidades
         s.setFlushMode(FlushMode.MANUAL);
-        Transaction t = s.beginTransaction();
+        //Transaction t = s.beginTransaction();
 
+        Gson gson = new Gson();
+        
         try {
             ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
 
@@ -80,13 +82,13 @@ public class ServiceProviderResource {
             serviceProvider.setPassword("**********************");
 
             //t.commit();
-            //s.flush();
-            return Response.ok(serviceProvider).build();
+            return Response.ok(gson.toJson(serviceProvider)).build();
         } catch (Exception ex) {
-            t.rollback();
+            //t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
+            s.flush();
             s.close();
         }
     }
@@ -140,8 +142,6 @@ public class ServiceProviderResource {
         Transaction t = s.beginTransaction();
 
         try {
-            s.save(serviceProvider);
-
             for (int serviceTypeId : servicesTypeId) {
                 serviceProvider.addServiceType(new ServiceType(serviceTypeId));
             }
@@ -154,6 +154,7 @@ public class ServiceProviderResource {
                 serviceProvider.addPortfolio(new ServiceProviderPortfolio(image));
             }
 
+            s.save(serviceProvider);
             t.commit();
         } catch (Exception ex) {
             t.rollback();

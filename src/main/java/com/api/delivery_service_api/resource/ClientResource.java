@@ -35,7 +35,9 @@ public class ClientResource {
         Session s = HibernateUtil.getSessionFactory().openSession();
         //Evita atualização automática das entidades
         s.setFlushMode(FlushMode.MANUAL);
-        Transaction t = s.beginTransaction();
+//        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
 
         try {
             Client client = (Client) s.get(Client.class, id);
@@ -47,14 +49,14 @@ public class ClientResource {
             client.setPassword("**********************");
 
 //            t.commit();
-//            s.flush();
-            
-            return Response.ok(client).build();
+
+            return Response.ok(gson.toJson(client)).build();
         } catch (Exception ex) {
-            t.rollback();
+//            t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
+            s.flush();
             s.close();
         }
     }
