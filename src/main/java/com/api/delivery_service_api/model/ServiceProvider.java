@@ -5,9 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 @Entity
@@ -27,18 +32,31 @@ public class ServiceProvider extends User {
     @Transient
     private List<String> profilePortfolioSrc;
 
-    @Transient
-    private List<ServiceType> serviceTypes;
+    @ManyToMany
+    @JoinTable(
+            name = "service_provider_service_types",
+            joinColumns = @JoinColumn(name = "service_provider_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_type_id"))
+    private List<ServiceType> servicesType;
 
-    @Transient
+    @ManyToMany
+    @JoinTable(
+            name = "service_provider_occupation_areas",
+            joinColumns = @JoinColumn(name = "service_provider_id"),
+            inverseJoinColumns = @JoinColumn(name = "city_id"))
     private List<City> occupationAreas;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "service_provider_id")
+    private List<ServiceProviderPortfolio> portfolio;
+
     public ServiceProvider() {
-        this.serviceTypes = new ArrayList();
-        this.occupationAreas = new ArrayList();
         this.serviceTypeIds = new ArrayList();
         this.occupationAreaIds = new ArrayList();
         this.profilePortfolioSrc = new ArrayList();
+        this.servicesType = new ArrayList();
+        this.occupationAreas = new ArrayList();
+        this.portfolio = new ArrayList();
     }
 
     public String getExperienceDescription() {
@@ -84,12 +102,12 @@ public class ServiceProvider extends User {
         this.profilePortfolioSrc = profilePortfolioSrc;
     }
 
-    public List<ServiceType> getServiceTypes() {
-        return serviceTypes;
+    public List<ServiceType> getServicesType() {
+        return servicesType;
     }
 
-    public void setServiceTypes(List<ServiceType> serviceTypes) {
-        this.serviceTypes = serviceTypes;
+    public void setServicesType(List<ServiceType> servicesType) {
+        this.servicesType = servicesType;
     }
 
     public List<City> getOccupationAreas() {
@@ -100,12 +118,24 @@ public class ServiceProvider extends User {
         this.occupationAreas = occupationAreas;
     }
 
+    public List<ServiceProviderPortfolio> getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(List<ServiceProviderPortfolio> portfolio) {
+        this.portfolio = portfolio;
+    }
+
     public void addServiceType(ServiceType serviceType) {
-        this.serviceTypes.add(serviceType);
+        this.servicesType.add(serviceType);
     }
 
     public void addOccupationArea(City city) {
         this.occupationAreas.add(city);
+    }
+
+    public void addPortfolio(ServiceProviderPortfolio portfolio) {
+        this.portfolio.add(portfolio);
     }
 
     public HashMap getErrors() {

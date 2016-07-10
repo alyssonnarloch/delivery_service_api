@@ -46,15 +46,16 @@ public class ClientResource {
 
             client.setPassword("**********************");
 
-            t.commit();
-            s.flush();
-            s.close();
-
+//            t.commit();
+//            s.flush();
+            
             return Response.ok(client).build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
         }
     }
 

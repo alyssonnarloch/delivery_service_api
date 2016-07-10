@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://52.36.228.76:3306/delivery_service?zeroDateTimeBehavior=convertToNull</property>
-        <property name="hibernate.connection.username">aux_user@52.36.228.76</property>
-        <property name="hibernate.connection.password">p@ss#ees%2015</property>
-        <!--<property name="hibernate.hbm2ddl.auto">update</property>-->
-        <mapping class="com.api.delivery_service_api.model.City"/>
-        <mapping class="com.api.delivery_service_api.model.Client"/>
-        <mapping class="com.api.delivery_service_api.model.ClientServiceProviderEvaluation"/>
-        <mapping class="com.api.delivery_service_api.model.Project"/>
-        <mapping class="com.api.delivery_service_api.model.ProjectPortfolio"/>
-        <mapping class="com.api.delivery_service_api.model.ProjectStatus"/>
-        <mapping class="com.api.delivery_service_api.model.ServiceProvider"/>
-        <mapping class="com.api.delivery_service_api.model.ServiceProviderFavorite"/>
-        <mapping class="com.api.delivery_service_api.model.ServiceProviderOccupationArea"/>
-        <mapping class="com.api.delivery_service_api.model.ServiceProviderPortfolio"/>
-        <mapping class="com.api.delivery_service_api.model.ServiceProviderServiceType"/>
-        <mapping class="com.api.delivery_service_api.model.ServiceType"/>
-        <mapping class="com.api.delivery_service_api.model.State"/>
-        <mapping class="com.api.delivery_service_api.model.User"/>
-    </session-factory>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://52.36.228.76:3306/delivery_service?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">aux_user@52.36.228.76</property>
+    <property name="hibernate.connection.password">p@ss#ees%2015</property>
+    <!--<property name="hibernate.hbm2ddl.auto">update</property>-->
+    <mapping class="com.api.delivery_service_api.model.City"/>
+    <mapping class="com.api.delivery_service_api.model.Client"/>
+    <mapping class="com.api.delivery_service_api.model.ClientServiceProviderEvaluation"/>
+    <mapping class="com.api.delivery_service_api.model.Project"/>
+    <mapping class="com.api.delivery_service_api.model.ProjectPortfolio"/>
+    <mapping class="com.api.delivery_service_api.model.ProjectStatus"/>
+    <mapping class="com.api.delivery_service_api.model.ServiceProvider"/>
+    <mapping class="com.api.delivery_service_api.model.ServiceProviderPortfolio"/>
+    <mapping class="com.api.delivery_service_api.model.ServiceType"/>
+    <mapping class="com.api.delivery_service_api.model.State"/>
+    <mapping class="com.api.delivery_service_api.model.User"/>
+  </session-factory>
 </hibernate-configuration>
