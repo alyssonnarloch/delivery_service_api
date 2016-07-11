@@ -24,7 +24,9 @@ import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 
 @Path("service_provider")
 public class ServiceProviderResource {
@@ -46,14 +48,21 @@ public class ServiceProviderResource {
         serviceTypeIds.removeAll(Arrays.asList("", null));
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-//        Transaction t = s.beginTransaction();
+        Transaction t = s.beginTransaction();
 
         Gson gson = new Gson();
 
         try {
             Criteria criteria = s.createCriteria(ServiceProvider.class, "sp")
                     .createAlias("servicesType", "st")
-                    .createAlias("occupationAreas", "oa");
+                    .createAlias("occupationAreas", "oa")
+                    .createAlias("evaluation", "e")
+                    .setProjection(Projections.projectionList()
+                            .add(Projections.avg("e.qualification"), "qualificationAvg")
+                            .add(Projections.groupProperty("sp.id"))
+                            .add(Projections.property("sp.id"), "id")
+                            .add(Projections.property("sp.servicesType"), "servicesType"))
+                    .setResultTransformer(Transformers.aliasToBean(ServiceProvider.class));
 
             if (name != null && !name.equals("")) {
                 criteria.add(Restrictions.like("sp.name", name, MatchMode.ANYWHERE));
@@ -73,10 +82,10 @@ public class ServiceProviderResource {
 
             List<ServiceProvider> serviceProviders = criteria.list();
 
-//            t.commit();
+            t.commit();
             return Response.ok(gson.toJson(serviceProviders)).build();
         } catch (Exception ex) {
-//            t.rollback();
+            t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
@@ -91,7 +100,7 @@ public class ServiceProviderResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") int id) {
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualização automática das entidades
+        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
         s.setFlushMode(FlushMode.MANUAL);
         //Transaction t = s.beginTransaction();
 
@@ -101,7 +110,7 @@ public class ServiceProviderResource {
             ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
 
             if (serviceProvider == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Não existe prestador de serviço associado ao id " + id + ".").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("NÃ£o existe prestador de serviÃ§o associado ao id " + id + ".").build();
             }
 
             serviceProvider.setPassword("**********************");
