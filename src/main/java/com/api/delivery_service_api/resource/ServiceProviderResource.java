@@ -24,6 +24,7 @@ import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -59,9 +60,12 @@ public class ServiceProviderResource {
                     .createAlias("evaluation", "e")
                     .setProjection(Projections.projectionList()
                             .add(Projections.avg("e.qualification"), "qualificationAvg")
-                            .add(Projections.groupProperty("sp.id"))
-                            .add(Projections.property("sp.id"), "id")
-                            .add(Projections.property("sp.servicesType"), "servicesType"))
+                            .add(Projections.groupProperty("sp.id"), "id")
+                            .add(Projections.property("sp.name"), "name")
+                            .add(Projections.property("sp.experienceDescription"), "experienceDescription")
+                            .add(Projections.property("sp.available"), "available")
+                            .add(Projections.property("sp.profileImage"), "profileImage"))
+                    .addOrder(Order.desc("qualificationAvg"))
                     .setResultTransformer(Transformers.aliasToBean(ServiceProvider.class));
 
             if (name != null && !name.equals("")) {
@@ -100,7 +104,7 @@ public class ServiceProviderResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") int id) {
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
+        //Evita atualização automática das entidades
         s.setFlushMode(FlushMode.MANUAL);
         //Transaction t = s.beginTransaction();
 
