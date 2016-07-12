@@ -6,6 +6,7 @@ import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.model.ServiceProviderPortfolio;
 import com.api.delivery_service_api.model.ServiceType;
 import com.google.gson.Gson;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -59,12 +60,9 @@ public class ServiceProviderResource {
                     .createAlias("occupationAreas", "oa")
                     .createAlias("evaluation", "e")
                     .setProjection(Projections.projectionList()
-                            .add(Projections.avg("e.qualification"), "qualificationAvg")
-                            .add(Projections.groupProperty("sp.id"), "id")
                             .add(Projections.property("sp.name"), "name")
-                            .add(Projections.property("sp.experienceDescription"), "experienceDescription")
-                            .add(Projections.property("sp.available"), "available")
-                            .add(Projections.property("sp.profileImage"), "profileImage"))
+                            .add(Projections.groupProperty("sp.id"), "id")
+                            .add(Projections.avg("e.qualification"), "qualificationAvg"))
                     .addOrder(Order.desc("qualificationAvg"))
                     .setResultTransformer(Transformers.aliasToBean(ServiceProvider.class));
 
@@ -84,10 +82,19 @@ public class ServiceProviderResource {
                 criteria.add(Restrictions.eq("sp.available", available));
             }
 
-            List<ServiceProvider> serviceProviders = criteria.list();
+            List<ServiceProvider> criteriaServiceProviders = criteria.list();
+            List<ServiceProvider> servicesProvider = new ArrayList();
+
+            for (ServiceProvider serviceProvider : criteriaServiceProviders) {
+                ServiceProvider serviceProviderAux = (ServiceProvider) s.get(ServiceProvider.class, serviceProvider.getId());
+                serviceProviderAux.setQualificationAvg(serviceProvider.getQualificationAvg());
+
+                servicesProvider.add(serviceProviderAux);
+            }
 
             t.commit();
-            return Response.ok(gson.toJson(serviceProviders)).build();
+
+            return Response.ok(gson.toJson(servicesProvider)).build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -95,7 +102,6 @@ public class ServiceProviderResource {
         } finally {
             s.flush();
             s.close();
-
         }
     }
 
