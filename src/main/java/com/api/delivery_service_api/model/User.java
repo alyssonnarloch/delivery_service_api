@@ -132,29 +132,29 @@ public class User implements Serializable {
         EmailValidator validator = EmailValidator.getInstance();
         return validator.isValid(this.email);
     }
-    
+
     public boolean hasEmail() {
         Session s = HibernateUtil.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
-        
+
         String sql = "SELECT COUNT(id) FROM User WHERE email = :email";
-        
-        if(this.getId() > 0) {
+
+        if (this.getId() > 0) {
             sql = " AND id <> :id";
         }
-        
+
         Query query = s.createQuery(sql);
         query.setString("email", this.getEmail());
-        if(this.id > 0) {
+        if (this.id > 0) {
             query.setInteger("id", this.getId());
         }
 
         Long numUsers = (Long) query.uniqueResult();
-        
+
         t.commit();
         s.flush();
         s.close();
-        
+
         return numUsers > 0;
     }
 }

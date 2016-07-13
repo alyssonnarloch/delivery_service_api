@@ -66,6 +66,16 @@ public class ServiceProvider extends User {
         this.portfolio = new ArrayList();
     }
 
+    public ServiceProvider(int id) {
+        this.setId(id);
+        this.serviceTypeIds = new ArrayList();
+        this.occupationAreaIds = new ArrayList();
+        this.profilePortfolioSrc = new ArrayList();
+        this.servicesType = new ArrayList();
+        this.occupationAreas = new ArrayList();
+        this.portfolio = new ArrayList();
+    }
+
     public String getExperienceDescription() {
         return experienceDescription;
     }
