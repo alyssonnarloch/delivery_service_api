@@ -1,14 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.api.delivery_service_api.extras;
 
-/**
- *
- * @author Alysson Narloch
- */
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Extra {
-    
+
+    public static boolean zipCodeValid(String zipCode) {
+        Pattern pattern = Pattern.compile("[0-9]{5}-[0-9]{3}");
+        Matcher m = pattern.matcher(zipCode);
+        return m.matches();
+    }
+
 }

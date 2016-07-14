@@ -24,3 +24,6 @@ http://www.programcreek.com/java-api-examples/index.php?api=io.jsonwebtoken.Jwts
 http://www.programcreek.com/java-api-examples/index.php?source_dir=spring-security-jwt-master/src/main/java/com/technicalrex/springsecurityjwt/auth/jwt/TokenHandler.java
 http://www.programcreek.com/java-api-examples/index.php?source_dir=spark-jwt-auth-master/src/main/java/Validation/TokenValidator.java
 http://www.programcreek.com/java-api-examples/index.php?source_dir=spark-jwt-auth-master/src/main/java/Service/JwtTokenServiceImpl.java
+
+Hibernate Validator
+	https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Web_Platform/5/html-single/Hibernate_Validator_Reference_Guide/index.html#idm84913344

@@ -19,6 +19,10 @@ public class ProjectStatus implements Serializable {
     public ProjectStatus() {
     }
 
+    public ProjectStatus(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

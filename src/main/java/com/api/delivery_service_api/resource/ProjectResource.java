@@ -1,12 +1,13 @@
 package com.api.delivery_service_api.resource;
 
+import com.api.delivery_service_api.extras.RESTDateParam;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
 import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.Project;
+import com.api.delivery_service_api.model.ProjectStatus;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.google.gson.Gson;
-import java.util.Date;
 import java.util.HashMap;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Context;
@@ -18,14 +19,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 
 @Path("project")
-public class projectResource {
+public class ProjectResource {
 
     @Context
     private UriInfo context;
 
-    public projectResource() {
+    public ProjectResource() {
     }
 
     @POST
@@ -36,10 +38,10 @@ public class projectResource {
             @FormParam("service_provider_id") int serviceProviderId,
             @FormParam("address") String address,
             @FormParam("number") int number,
-            @FormParam("zip_code") int zipcode,
+            @FormParam("zip_code") String zipcode,
             @FormParam("city_id") int cityId,
-            @FormParam("start_at") Date startAt,
-            @FormParam("end_at") Date endAt) {
+            @FormParam("start_at") RESTDateParam startAt,
+            @FormParam("end_at") RESTDateParam endAt) {
 
         Gson gson = new Gson();
 
@@ -53,8 +55,9 @@ public class projectResource {
         project.setNumber(number);
         project.setZipCode(zipcode);
         project.setCity(new City(cityId));
-        project.setStartAt(startAt);
-        project.setEndAt(endAt);
+        project.setStartAt(startAt.getDate());
+        project.setEndAt(endAt.getDate());
+        project.setStatus(new ProjectStatus(1));
 
         HashMap<String, String> errors = project.getErrors();
 
@@ -68,6 +71,10 @@ public class projectResource {
         try {
             s.save(project);
             t.commit();
+        } catch (ConstraintViolationException cve) {
+            t.rollback();
+            cve.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviços ou Cidade inválidos.").build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
