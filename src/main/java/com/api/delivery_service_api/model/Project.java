@@ -1,7 +1,11 @@
 package com.api.delivery_service_api.model;
 
+import com.google.common.base.Joiner;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -147,4 +151,22 @@ public class Project implements Serializable {
         this.status = status;
     }
 
+    public HashMap getErrors() {
+
+        HashMap<String, String> errors = new HashMap();
+
+        List<String> titleError = new ArrayList();
+
+        Joiner joiner = Joiner.on("/");
+
+        if (titleError == null || titleError.isEmpty()) {
+            titleError.add("O título deve ser informado.");
+        }
+
+        if (titleError.size() > 0) {
+            errors.put("title", joiner.join(titleError));
+        }
+
+        return errors;
+    }
 }

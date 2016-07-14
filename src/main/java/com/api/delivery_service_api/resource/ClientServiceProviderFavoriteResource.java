@@ -21,6 +21,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 @Path("favorite")
@@ -30,6 +31,42 @@ public class ClientServiceProviderFavoriteResource {
     private UriInfo context;
 
     public ClientServiceProviderFavoriteResource() {
+    }
+
+    @GET
+    @Path("services_provider/{client_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getServiceProvider(@PathParam("client_id") int clientId) {
+
+        if (clientId == 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente inválido.").build();
+        }
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        s.setFlushMode(FlushMode.MANUAL);
+
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            Criteria criteria = s.createCriteria(ClientServiceProviderFavorite.class, "f")
+                    .add(Restrictions.eq("f.client.id", clientId))
+                    .setProjection(Projections.property("f.serviceProvider"));
+
+            List<ClientServiceProviderFavorite> favorites = criteria.list();
+
+            t.commit();
+
+            return Response.ok(gson.toJson(favorites)).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.flush();
+            s.close();
+        }
     }
 
     @GET
@@ -48,20 +85,20 @@ public class ClientServiceProviderFavoriteResource {
         Transaction t = s.beginTransaction();
 
         Gson gson = new Gson();
-        
+
         try {
             Criteria criteria = s.createCriteria(ClientServiceProviderFavorite.class, "favorite")
                     .add(Restrictions.eq("favorite.client.id", clientId))
                     .add(Restrictions.eq("favorite.serviceProvider.id", serviceProviderId));
 
             List<ClientServiceProviderFavorite> favorites = criteria.list();
-            
+
             t.commit();
-            
-            if(favorites.isEmpty()) {
+
+            if (favorites.isEmpty()) {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente ou prestador de serviços inválido.").build();
             }
-            
+
             return Response.ok(gson.toJson(favorites.get(0))).build();
         } catch (Exception ex) {
             t.rollback();

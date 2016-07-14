@@ -26,6 +26,7 @@ public class RestConfig extends Application {
         resources.add(com.api.delivery_service_api.resource.ClientServiceProviderFavoriteResource.class);
         resources.add(com.api.delivery_service_api.resource.ServiceProviderResource.class);
         resources.add(com.api.delivery_service_api.resource.ServiceTypeResource.class);
+        resources.add(com.api.delivery_service_api.resource.projectResource.class);
     }
     
 }
