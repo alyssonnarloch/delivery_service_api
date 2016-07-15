@@ -1,5 +1,6 @@
 com\api\delivery_service_api\model\Auth.class
 com\api\delivery_service_api\model\ClientServiceProviderFavorite.class
+com\api\delivery_service_api\extras\RESTDateParam.class
 com\api\delivery_service_api\hibernate\HibernateUtil.class
 com\api\delivery_service_api\model\State.class
 com\api\delivery_service_api\resource\ClientResource.class

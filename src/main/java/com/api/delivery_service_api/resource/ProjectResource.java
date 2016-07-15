@@ -9,6 +9,12 @@ import com.api.delivery_service_api.model.ProjectStatus;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.google.gson.Gson;
 import java.util.HashMap;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
+import javax.validation.Validator;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -19,7 +25,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
 
 @Path("project")
 public class ProjectResource {
@@ -43,6 +48,10 @@ public class ProjectResource {
             @FormParam("start_at") RESTDateParam startAt,
             @FormParam("end_at") RESTDateParam endAt) {
 
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+
         Gson gson = new Gson();
 
         Project project = new Project();
@@ -59,7 +68,18 @@ public class ProjectResource {
         project.setEndAt(endAt.getDate());
         project.setStatus(new ProjectStatus(1));
 
-        HashMap<String, String> errors = project.getErrors();
+        HashMap<String, String> errors = new HashMap();
+        Set<ConstraintViolation<Project>> constraintViolations = validator.validate(project);
+
+        for (ConstraintViolation<Project> c : constraintViolations) {
+            String attrName = c.getPropertyPath().toString();
+
+            if (errors.get(attrName) != null) {
+                errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+            } else {
+                errors.put(attrName, c.getMessage());
+            }
+        }
 
         if (errors.size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
