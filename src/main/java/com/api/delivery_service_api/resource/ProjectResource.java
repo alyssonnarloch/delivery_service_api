@@ -7,6 +7,7 @@ import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.Project;
 import com.api.delivery_service_api.model.ProjectStatus;
 import com.api.delivery_service_api.model.ServiceProvider;
+import com.api.delivery_service_api.modelaux.Period;
 import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Set;
@@ -64,8 +65,12 @@ public class ProjectResource {
         project.setNumber(number);
         project.setZipCode(zipcode);
         project.setCity(new City(cityId));
-        project.setStartAt(startAt.getDate());
-        project.setEndAt(endAt.getDate());
+
+        Period period = new Period(startAt.getDate(), endAt.getDate());
+        project.setPeriodDate(period);
+        project.setStartAt(period.getStartAt());
+        project.setEndAt(period.getEndAt());
+
         project.setStatus(new ProjectStatus(1));
 
         HashMap<String, String> errors = new HashMap();

@@ -27,3 +27,4 @@ http://www.programcreek.com/java-api-examples/index.php?source_dir=spark-jwt-aut
 
 Hibernate Validator
 	https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Web_Platform/5/html-single/Hibernate_Validator_Reference_Guide/index.html#idm84913344
+	https://docs.oracle.com/javaee/7/api/javax/validation/constraints/package-summary.html

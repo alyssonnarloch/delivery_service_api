@@ -1,12 +1,12 @@
 package com.api.delivery_service_api.model;
 
-import com.api.delivery_service_api.extras.Extra;
-import com.google.common.base.Joiner;
+import com.api.delivery_service_api.custom_validation.ICity;
+import com.api.delivery_service_api.custom_validation.IClient;
+import com.api.delivery_service_api.custom_validation.IDatePeriod;
+import com.api.delivery_service_api.custom_validation.IZipCode;
+import com.api.delivery_service_api.modelaux.Period;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,20 +28,30 @@ public class Project implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
-    @Size(min = 1)
+    @NotNull(message = "O título deve ser informado.")
+    @Size(min = 5, message = "Título inválido.")
     private String title;
 
+    @NotNull(message = "A descrição deve ser informada.")
+    @Size(min = 5, message = "Descrição inválida.")
     private String description;
 
     @Column(name = "start_at")
+    @NotNull(message = "A data de início deve ser informada.")
     private Date startAt;
 
     @Column(name = "end_at")
+    @NotNull(message = "A data de término deve ser informada.")
     private Date endAt;
+
+    @Transient
+    @IDatePeriod(message = "Período de datas inválido.")
+    private Period periodDate;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @NotNull(message = "O cliente deve ser indormado.")
+    @IClient(message = "Cliente inválido.")
     private Client client;
 
     @ManyToOne
@@ -48,11 +60,20 @@ public class Project implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "city_id")
+    @NotNull(message = "A cidade deve ser informada.")
+    @ICity(message = "Cidade inválida.")
     private City city;
 
     @Column(name = "zip_code")
+    @NotNull(message = "O cep deve ser informado.")
+    @IZipCode(message = "CEP inválido.")
     private String zipCode;
+
+    @NotNull(message = "O endereço deve ser informado.")
+    @Size(min = 5, message = "Endereço inválido.")
     private String address;
+
+    @Min(value = 1, message = "Número inválido.")
     private int number;
 
     @ManyToOne
@@ -100,6 +121,14 @@ public class Project implements Serializable {
 
     public void setEndAt(Date endAt) {
         this.endAt = endAt;
+    }
+
+    public Period getPeriodDate() {
+        return periodDate;
+    }
+
+    public void setPeriodDate(Period periodDate) {
+        this.periodDate = periodDate;
     }
 
     public Client getClient() {
@@ -158,105 +187,4 @@ public class Project implements Serializable {
         this.status = status;
     }
 
-    public HashMap getErrors() {
-
-        HashMap<String, String> errors = new HashMap();
-
-        List<String> titleError = new ArrayList();
-        List<String> descriptionError = new ArrayList();
-        List<String> clientError = new ArrayList();
-        List<String> serviceProviderError = new ArrayList();
-        List<String> zipCodeError = new ArrayList();
-        List<String> addressError = new ArrayList();
-        List<String> numberError = new ArrayList();
-        List<String> cityError = new ArrayList();
-        List<String> startAtError = new ArrayList();
-        List<String> endAtError = new ArrayList();
-
-        Joiner joiner = Joiner.on("/");
-
-        if (this.title == null || this.title.isEmpty()) {
-            titleError.add("O título deve ser informado.");
-        }
-
-        if (this.description == null || this.description.isEmpty()) {
-            descriptionError.add("A descrição deve ser informada.");
-        }
-
-        if (this.client.getId() <= 0) {
-            serviceProviderError.add("Id do cliente inválido.");
-        }
-
-        if (this.sericeProvider.getId() <= 0) {
-            serviceProviderError.add("Id do prestador de serviços inválido.");
-        }
-
-        if (this.zipCode == null || this.zipCode.isEmpty()) {
-            zipCodeError.add("O CEP deve ser informado.");
-        } else if (!Extra.zipCodeValid(this.zipCode)) {
-            zipCodeError.add("CEP inválido.");
-        }
-
-        if (this.address == null || this.address.isEmpty()) {
-            addressError.add("O endereço deve ser informado.");
-        }
-
-        if (this.number <= 0) {
-            numberError.add("Número inválido.");
-        }
-
-        if (this.city == null || this.city.getId() <= 0) {
-            cityError.add("Cidade inválida.");
-        }
-
-        if (this.startAt == null) {
-            startAtError.add("Data de início deve ser informada.");
-        }
-
-        if (this.endAt == null) {
-            endAtError.add("Data de término deve ser informada.");
-        }
-
-        if (titleError.size() > 0) {
-            errors.put("title", joiner.join(titleError));
-        }
-
-        if (descriptionError.size() > 0) {
-            errors.put("description", joiner.join(descriptionError));
-        }
-
-        if (clientError.size() > 0) {
-            errors.put("client", joiner.join(clientError));
-        }
-
-        if (serviceProviderError.size() > 0) {
-            errors.put("service_provider", joiner.join(serviceProviderError));
-        }
-
-        if (zipCodeError.size() > 0) {
-            errors.put("zip_code", joiner.join(zipCodeError));
-        }
-
-        if (addressError.size() > 0) {
-            errors.put("address", joiner.join(addressError));
-        }
-
-        if (numberError.size() > 0) {
-            errors.put("number", joiner.join(numberError));
-        }
-
-        if (cityError.size() > 0) {
-            errors.put("city", joiner.join(cityError));
-        }
-
-        if (startAtError.size() > 0) {
-            errors.put("start_at", joiner.join(startAtError));
-        }
-
-        if (endAtError.size() > 0) {
-            errors.put("end_at", joiner.join(endAtError));
-        }
-
-        return errors;
-    }
 }

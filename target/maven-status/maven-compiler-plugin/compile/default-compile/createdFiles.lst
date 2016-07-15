@@ -1,10 +1,12 @@
 com\api\delivery_service_api\model\Auth.class
+com\api\delivery_service_api\custom_validation\DatePeriod.class
 com\api\delivery_service_api\model\ClientServiceProviderFavorite.class
 com\api\delivery_service_api\extras\RESTDateParam.class
 com\api\delivery_service_api\hibernate\HibernateUtil.class
 com\api\delivery_service_api\model\State.class
 com\api\delivery_service_api\resource\ClientResource.class
 com\api\delivery_service_api\model\ServiceType.class
+com\api\delivery_service_api\custom_validation\DatePeriodValidator.class
 com\api\delivery_service_api\model\ClientEvaluation.class
 com\api\delivery_service_api\model\User.class
 com\api\delivery_service_api\resource\ClientServiceProviderFavoriteResource.class
@@ -13,6 +15,7 @@ com\api\delivery_service_api\resource\AuthResource.class
 com\api\delivery_service_api\model\City.class
 com\api\delivery_service_api\auth\Token.class
 com\api\delivery_service_api\model\Client.class
+com\api\delivery_service_api\modelaux\Period.class
 com\api\delivery_service_api\resource\ProjectResource.class
 com\api\delivery_service_api\model\ProjectPortfolio.class
 com\api\delivery_service_api\model\ServiceProviderEvaluation.class
