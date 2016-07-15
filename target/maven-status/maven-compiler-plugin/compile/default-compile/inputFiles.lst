@@ -1,12 +1,15 @@
-D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\DatePeriod.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\IDatePeriod.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\RestConfig.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceProvider.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\ProjectResource.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceType.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\IZipCode.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\ClientValidator.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\Client.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\CityResource.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ClientEvaluation.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\City.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\INotEmpty.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\AuthResource.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceProviderEvaluation.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ServiceProviderPortfolio.java
@@ -15,11 +18,15 @@ D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_a
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\ServiceTypeResource.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ProjectStatus.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\State.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\IClient.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\CityValidator.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\DatePeriodValidator.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\hibernate\HibernateUtil.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\ServiceProviderResource.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\modelaux\Period.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\User.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\NotEmptyValidator.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\ICity.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\Auth.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\auth\Token.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\ClientResource.java
@@ -27,3 +34,4 @@ D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_a
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\extras\RESTDateParam.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ClientServiceProviderFavorite.java
 D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\ProjectPortfolio.java
+D:\projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\ZipCodeValidator.java

@@ -49,12 +49,14 @@ public class ProjectResource {
             @FormParam("start_at") RESTDateParam startAt,
             @FormParam("end_at") RESTDateParam endAt) {
 
+
+        Gson gson = new Gson();
+        
+        HashMap<String, String> errors = new HashMap();
         Validator validator;
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-
-        Gson gson = new Gson();
-
+        
         Project project = new Project();
 
         project.setClient(new Client(clientId));
@@ -73,7 +75,6 @@ public class ProjectResource {
 
         project.setStatus(new ProjectStatus(1));
 
-        HashMap<String, String> errors = new HashMap();
         Set<ConstraintViolation<Project>> constraintViolations = validator.validate(project);
 
         for (ConstraintViolation<Project> c : constraintViolations) {

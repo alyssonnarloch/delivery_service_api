@@ -1,5 +1,7 @@
 package com.api.delivery_service_api.model;
 
+import com.api.delivery_service_api.custom_validation.INotEmpty;
+import com.api.delivery_service_api.custom_validation.IZipCode;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -12,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import org.apache.commons.validator.EmailValidator;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -26,8 +30,15 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @INotEmpty(message = "O nome deve ser informado.")
+    @Size(min = 5, message = "Nome inválido.")
     private String name;
+
+    @INotEmpty(message = "O e-mail deve ser informado.")
+    @Size(min = 5, message = "E-mail inválido.")
     private String email;
+
+    @INotEmpty(message = "O telefone deve ser informado.")
     private String phone;
 
     @ManyToOne
@@ -35,14 +46,22 @@ public class User implements Serializable {
     private City city;
 
     @Column(name = "zip_code")
+    @INotEmpty(message = "O CEP deve ser informado.")
+    @IZipCode(message = "CEP inválido.")
     private int zipCode;
 
+    @INotEmpty(message = "O endereço deve ser informado.")
+    @Size(min = 5, message = "Endereço inválido.")
     private String address;
+    
+    @Min(value = 1, message = "Número inválido.")
     private int number;
 
     @Column(name = "profile_image", length = 1500)
     private String profileImage;
 
+    @INotEmpty(message = "A senha deve ser informada.")
+    @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres.")
     private String password;
 
     public User() {

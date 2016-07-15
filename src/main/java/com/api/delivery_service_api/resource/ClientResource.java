@@ -3,8 +3,14 @@ package com.api.delivery_service_api.resource;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.City;
+import com.api.delivery_service_api.model.Project;
 import com.google.gson.Gson;
 import java.util.HashMap;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.FormParam;
@@ -49,7 +55,6 @@ public class ClientResource {
             client.setPassword("**********************");
 
 //            t.commit();
-
             return Response.ok(gson.toJson(client)).build();
         } catch (Exception ex) {
 //            t.rollback();
@@ -76,6 +81,11 @@ public class ClientResource {
 
         Gson gson = new Gson();
 
+        HashMap<String, String> errors = new HashMap();
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+
         Client client = new Client();
         client.setName(name);
         client.setEmail(email);
@@ -90,7 +100,17 @@ public class ClientResource {
         client.setPassword(password);
         client.setProfileImage(profileImage);
 
-        HashMap<String, String> errors = client.getErrors();
+        Set<ConstraintViolation<Client>> constraintViolations = validator.validate(client);
+
+        for (ConstraintViolation<Client> c : constraintViolations) {
+            String attrName = c.getPropertyPath().toString();
+
+            if (errors.get(attrName) != null) {
+                errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+            } else {
+                errors.put(attrName, c.getMessage());
+            }
+        }
 
         if (errors.size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();

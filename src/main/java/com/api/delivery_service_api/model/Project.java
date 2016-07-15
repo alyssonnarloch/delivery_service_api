@@ -3,6 +3,8 @@ package com.api.delivery_service_api.model;
 import com.api.delivery_service_api.custom_validation.ICity;
 import com.api.delivery_service_api.custom_validation.IClient;
 import com.api.delivery_service_api.custom_validation.IDatePeriod;
+import com.api.delivery_service_api.custom_validation.INotEmpty;
+import com.api.delivery_service_api.custom_validation.IServiceProvider;
 import com.api.delivery_service_api.custom_validation.IZipCode;
 import com.api.delivery_service_api.modelaux.Period;
 import java.io.Serializable;
@@ -28,11 +30,11 @@ public class Project implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull(message = "O título deve ser informado.")
+    @INotEmpty(message = "O título deve ser informado.")
     @Size(min = 5, message = "Título inválido.")
     private String title;
 
-    @NotNull(message = "A descrição deve ser informada.")
+    @INotEmpty(message = "A descrição eve ser informada.")
     @Size(min = 5, message = "Descrição inválida.")
     private String description;
 
@@ -56,6 +58,8 @@ public class Project implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "service_provider_id")
+    @NotNull(message = "O prestador de serviços deve ser indormado.")
+    @IServiceProvider(message = "Prestador de serviços inválido.")
     private ServiceProvider sericeProvider;
 
     @ManyToOne
@@ -65,11 +69,11 @@ public class Project implements Serializable {
     private City city;
 
     @Column(name = "zip_code")
-    @NotNull(message = "O cep deve ser informado.")
+    @INotEmpty(message = "O CEP deve ser informado.")
     @IZipCode(message = "CEP inválido.")
     private String zipCode;
 
-    @NotNull(message = "O endereço deve ser informado.")
+    @INotEmpty(message = "O endereço deve ser informado.")
     @Size(min = 5, message = "Endereço inválido.")
     private String address;
 
