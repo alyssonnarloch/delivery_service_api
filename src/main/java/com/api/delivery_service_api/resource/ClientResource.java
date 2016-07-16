@@ -41,7 +41,7 @@ public class ClientResource {
         Session s = HibernateUtil.getSessionFactory().openSession();
         //Evita atualização automática das entidades
         s.setFlushMode(FlushMode.MANUAL);
-//        Transaction t = s.beginTransaction();
+        Transaction t = s.beginTransaction();
 
         Gson gson = new Gson();
 
@@ -54,10 +54,10 @@ public class ClientResource {
 
             client.setPassword("**********************");
 
-//            t.commit();
+            t.commit();
             return Response.ok(gson.toJson(client)).build();
         } catch (Exception ex) {
-//            t.rollback();
+            t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
@@ -72,7 +72,7 @@ public class ClientResource {
     public Response save(@FormParam("name") String name,
             @FormParam("email") String email,
             @FormParam("phone") String phone,
-            @FormParam("zipcode") int zipCode,
+            @FormParam("zipcode") String zipCode,
             @FormParam("city_id") int cityId,
             @FormParam("address") String address,
             @FormParam("number") int number,

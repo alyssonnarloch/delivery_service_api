@@ -9,6 +9,7 @@ com\api\delivery_service_api\resource\ClientResource.class
 com\api\delivery_service_api\model\ServiceType.class
 com\api\delivery_service_api\custom_validation\DatePeriodValidator.class
 com\api\delivery_service_api\model\ClientEvaluation.class
+com\api\delivery_service_api\custom_validation\ServiceProviderValidator.class
 com\api\delivery_service_api\custom_validation\NotEmptyValidator.class
 com\api\delivery_service_api\model\User.class
 com\api\delivery_service_api\resource\ClientServiceProviderFavoriteResource.class
@@ -35,3 +36,4 @@ com\api\delivery_service_api\model\ServiceProvider.class
 com\api\delivery_service_api\custom_validation\ZipCodeValidator.class
 com\api\delivery_service_api\resource\RestConfig.class
 com\api\delivery_service_api\custom_validation\IClient.class
+com\api\delivery_service_api\custom_validation\IServiceProvider.class

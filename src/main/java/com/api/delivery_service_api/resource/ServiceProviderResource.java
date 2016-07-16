@@ -143,7 +143,7 @@ public class ServiceProviderResource {
     public Response save(@FormParam("name") String name,
             @FormParam("email") String email,
             @FormParam("phone") String phone,
-            @FormParam("zipcode") int zipCode,
+            @FormParam("zipcode") String zipCode,
             @FormParam("city_id") int cityId,
             @FormParam("address") String address,
             @FormParam("number") int number,
@@ -176,7 +176,7 @@ public class ServiceProviderResource {
         serviceProvider.setOccupationAreaIds(occupationAreas);
         serviceProvider.setProfilePortfolioSrc(profilePortfolio);
 
-        HashMap<String, String> errors = serviceProvider.getErrors();
+        HashMap<String, String> errors = new HashMap();
 
         if (errors.size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();

@@ -1,12 +1,14 @@
 package com.api.delivery_service_api.model;
 
+import com.api.delivery_service_api.custom_validation.IEmail;
 import com.api.delivery_service_api.custom_validation.INotEmpty;
+import com.api.delivery_service_api.custom_validation.IUserNotExists;
 import com.api.delivery_service_api.custom_validation.IZipCode;
-import com.api.delivery_service_api.hibernate.HibernateUtil;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,16 +16,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-import org.apache.commons.validator.EmailValidator;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 @Entity
 @Table(name = "users")
 @DiscriminatorColumn(name = "profile_id", discriminatorType = DiscriminatorType.INTEGER)
+@IUserNotExists(message = "E-mail já utilizado por outro usuário.")
 public class User implements Serializable {
 
     @Id
@@ -35,7 +35,7 @@ public class User implements Serializable {
     private String name;
 
     @INotEmpty(message = "O e-mail deve ser informado.")
-    @Size(min = 5, message = "E-mail inválido.")
+    @IEmail(message = "E-mail inválido.")
     private String email;
 
     @INotEmpty(message = "O telefone deve ser informado.")
@@ -48,12 +48,12 @@ public class User implements Serializable {
     @Column(name = "zip_code")
     @INotEmpty(message = "O CEP deve ser informado.")
     @IZipCode(message = "CEP inválido.")
-    private int zipCode;
+    private String zipCode;
 
     @INotEmpty(message = "O endereço deve ser informado.")
     @Size(min = 5, message = "Endereço inválido.")
     private String address;
-    
+
     @Min(value = 1, message = "Número inválido.")
     private int number;
 
@@ -107,11 +107,11 @@ public class User implements Serializable {
         this.city = city;
     }
 
-    public int getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(int zipCode) {
+    public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 
@@ -147,33 +147,10 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public boolean validEmail() {
-        EmailValidator validator = EmailValidator.getInstance();
-        return validator.isValid(this.email);
+    @Transient
+    public String getProfileId() {
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value();
     }
 
-    public boolean hasEmail() {
-        Session s = HibernateUtil.getSessionFactory().openSession();
-        Transaction t = s.beginTransaction();
-
-        String sql = "SELECT COUNT(id) FROM User WHERE email = :email";
-
-        if (this.getId() > 0) {
-            sql = " AND id <> :id";
-        }
-
-        Query query = s.createQuery(sql);
-        query.setString("email", this.getEmail());
-        if (this.id > 0) {
-            query.setInteger("id", this.getId());
-        }
-
-        Long numUsers = (Long) query.uniqueResult();
-
-        t.commit();
-        s.flush();
-        s.close();
-
-        return numUsers > 0;
-    }
+   
 }
