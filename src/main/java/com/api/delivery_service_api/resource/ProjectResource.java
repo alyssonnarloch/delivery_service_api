@@ -23,11 +23,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -187,4 +189,50 @@ public class ProjectResource {
         }
     }
 
+    @PUT
+    @Path("/evaluation")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(@FormParam("project_id") int projectId,
+            @FormParam("qualification") int qualification,
+            @FormParam("description") String description,
+            @FormParam("profile_id") int profileId) {
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        //Evita atualização automática das entidades
+        s.setFlushMode(FlushMode.MANUAL);
+        Transaction t = s.beginTransaction();
+
+        try {
+            Project project = (Project) s.get(Project.class, projectId);
+
+            if (project == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto não encontrado.").build();
+            }
+
+            project.setPeriodDate(new Period(project.getStartAt(), project.getEndAt()));
+            project.setStatus(new ProjectStatus(4));
+
+            //Cliente
+            if (profileId == 1) {
+                project.setClientEvaluation(description);
+                project.setClientQualification(qualification);
+            } else if (profileId == 2) {
+                project.setServiceProviderEvaluation(description);
+                project.setServiceProviderQualification(qualification);
+            }
+
+            s.update(project);
+
+            t.commit();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.flush();
+            s.close();
+        }
+
+        return Response.ok().build();
+    }
 }

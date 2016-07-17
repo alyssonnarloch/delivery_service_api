@@ -55,10 +55,6 @@ public class ServiceProvider extends User {
     @JoinColumn(name = "service_provider_id")
     private List<ServiceProviderPortfolio> portfolio;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "service_provider_id")
-    private List<ServiceProviderEvaluation> evaluation;
-
     @Transient
     private double qualificationAvg;
 
@@ -95,14 +91,6 @@ public class ServiceProvider extends User {
 
     public void setAvailable(boolean available) {
         this.available = available;
-    }
-
-    public List<ServiceProviderEvaluation> getEvaluation() {
-        return evaluation;
-    }
-
-    public void setEvaluation(List<ServiceProviderEvaluation> evaluation) {
-        this.evaluation = evaluation;
     }
 
     public List<Integer> getServiceTypeIds() {

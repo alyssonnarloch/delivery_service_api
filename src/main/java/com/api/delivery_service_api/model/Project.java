@@ -56,10 +56,10 @@ public class Project implements Serializable {
     private String clientEvaluation;
 
     @Column(name = "service_provider_qualification")
-    private int serviceProviderQualification;
+    private Integer serviceProviderQualification;
 
     @Column(name = "client_qualification")
-    private int clientQualification;
+    private Integer clientQualification;
 
     @Transient
     @IDatePeriod(message = "Período de datas inválido.")
@@ -234,19 +234,19 @@ public class Project implements Serializable {
         this.clientEvaluation = clientEvaluation;
     }
 
-    public int getServiceProviderQualification() {
+    public Integer getServiceProviderQualification() {
         return serviceProviderQualification;
     }
 
-    public void setServiceProviderQualification(int serviceProviderQualification) {
+    public void setServiceProviderQualification(Integer serviceProviderQualification) {
         this.serviceProviderQualification = serviceProviderQualification;
     }
 
-    public int getClientQualification() {
+    public Integer getClientQualification() {
         return clientQualification;
     }
 
-    public void setClientQualification(int clientQualification) {
+    public void setClientQualification(Integer clientQualification) {
         this.clientQualification = clientQualification;
     }
 
