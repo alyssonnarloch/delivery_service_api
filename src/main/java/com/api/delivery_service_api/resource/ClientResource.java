@@ -39,7 +39,7 @@ public class ClientResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") int id) {
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualização automática das entidades
+        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
         s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
@@ -49,7 +49,7 @@ public class ClientResource {
             Client client = (Client) s.get(Client.class, id);
 
             if (client == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Não existe cliente associado ao id " + id + ".").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("NÃ£o existe cliente associado ao id " + id + ".").build();
             }
 
             client.setPassword("**********************");
@@ -104,7 +104,11 @@ public class ClientResource {
 
         for (ConstraintViolation<Client> c : constraintViolations) {
             String attrName = c.getPropertyPath().toString();
-
+            
+            if(attrName != null && attrName.isEmpty()) {
+                attrName = c.getRootBeanClass().getSimpleName();
+            }
+            
             if (errors.get(attrName) != null) {
                 errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
             } else {

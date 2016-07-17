@@ -1,6 +1,6 @@
 package com.api.delivery_service_api.resource;
 
-import com.api.delivery_service_api.extras.RESTDateParam;
+import com.api.delivery_service_api.extras.DateParam;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
 import com.api.delivery_service_api.model.Client;
@@ -46,8 +46,8 @@ public class ProjectResource {
             @FormParam("number") int number,
             @FormParam("zip_code") String zipcode,
             @FormParam("city_id") int cityId,
-            @FormParam("start_at") RESTDateParam startAt,
-            @FormParam("end_at") RESTDateParam endAt) {
+            @FormParam("start_at") DateParam startAt,
+            @FormParam("end_at") DateParam endAt) {
 
 
         Gson gson = new Gson();

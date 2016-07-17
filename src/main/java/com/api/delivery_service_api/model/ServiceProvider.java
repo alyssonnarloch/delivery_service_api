@@ -1,9 +1,9 @@
 package com.api.delivery_service_api.model;
 
-import com.google.common.base.Joiner;
+import com.api.delivery_service_api.custom_validation.IListNotEmpty;
+import com.api.delivery_service_api.custom_validation.INotEmpty;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,16 +20,21 @@ import javax.persistence.Transient;
 public class ServiceProvider extends User {
 
     @Column(name = "experience_description", length = 1500)
+    @INotEmpty(message = "A experiência deve ser informada.")
     private String experienceDescription;
+    
     private boolean available;
 
     @Transient
+    @IListNotEmpty(message = "Os tipos de serviço devem ser informados.")
     private List<Integer> serviceTypeIds;
 
     @Transient
+    @IListNotEmpty(message = "As áreas de atuação devem ser informadas.")
     private List<Integer> occupationAreaIds;
 
     @Transient
+    @IListNotEmpty(message = "As imagens do portifólio devem ser adicionadas.")
     private List<String> profilePortfolioSrc;
 
     @ManyToMany
@@ -115,6 +120,7 @@ public class ServiceProvider extends User {
     }
 
     public void setOccupationAreaIds(List<Integer> occupationAreaIds) {
+        occupationAreaIds.removeAll(Arrays.asList("", null));
         this.occupationAreaIds = occupationAreaIds;
     }
 

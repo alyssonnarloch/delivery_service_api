@@ -9,10 +9,10 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Documented
-@Constraint(validatedBy = {NotEmptyValidator.class})
+@Constraint(validatedBy = {ListNotEmptyValidator.class})
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface INotEmpty {
+public @interface IListNotEmpty {
 
     String message() default "Campo deve ser informado.";
 

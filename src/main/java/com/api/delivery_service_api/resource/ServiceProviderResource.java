@@ -2,6 +2,7 @@ package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
+import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.model.ServiceProviderPortfolio;
 import com.api.delivery_service_api.model.ServiceType;
@@ -10,6 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
@@ -112,7 +118,7 @@ public class ServiceProviderResource {
         Session s = HibernateUtil.getSessionFactory().openSession();
         //Evita atualização automática das entidades
         s.setFlushMode(FlushMode.MANUAL);
-        //Transaction t = s.beginTransaction();
+        Transaction t = s.beginTransaction();
 
         Gson gson = new Gson();
 
@@ -125,10 +131,10 @@ public class ServiceProviderResource {
 
             serviceProvider.setPassword("**********************");
 
-            //t.commit();
+            t.commit();
             return Response.ok(gson.toJson(serviceProvider)).build();
         } catch (Exception ex) {
-            //t.rollback();
+            t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
@@ -157,6 +163,11 @@ public class ServiceProviderResource {
 
         Gson gson = new Gson();
 
+        HashMap<String, String> errors = new HashMap();
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setName(name);
         serviceProvider.setEmail(email);
@@ -176,7 +187,21 @@ public class ServiceProviderResource {
         serviceProvider.setOccupationAreaIds(occupationAreas);
         serviceProvider.setProfilePortfolioSrc(profilePortfolio);
 
-        HashMap<String, String> errors = new HashMap();
+        Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider);
+
+        for (ConstraintViolation<ServiceProvider> c : constraintViolations) {
+            String attrName = c.getPropertyPath().toString();
+            
+            if(attrName != null && attrName.isEmpty()) {
+                attrName = c.getRootBeanClass().getSimpleName();
+            }
+            
+            if (errors.get(attrName) != null) {
+                errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+            } else {
+                errors.put(attrName, c.getMessage());
+            }
+        }
 
         if (errors.size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
