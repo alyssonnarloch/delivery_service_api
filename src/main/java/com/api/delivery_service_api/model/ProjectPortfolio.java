@@ -19,10 +19,6 @@ public class ProjectPortfolio implements Serializable {
     private String image;
     private boolean approved;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
-
     public ProjectPortfolio() {
     }
 
@@ -48,14 +44,6 @@ public class ProjectPortfolio implements Serializable {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
 }

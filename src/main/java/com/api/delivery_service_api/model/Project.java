@@ -9,6 +9,8 @@ import com.api.delivery_service_api.custom_validation.IZipCode;
 import com.api.delivery_service_api.modelaux.Period;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Min;
@@ -46,6 +49,18 @@ public class Project implements Serializable {
     @NotNull(message = "A data de término deve ser informada.")
     private Date endAt;
 
+    @Column(name = "service_provider_evaluation")
+    private String serviceProviderEvaluation;
+
+    @Column(name = "client_evaluation")
+    private String clientEvaluation;
+
+    @Column(name = "service_provider_qualification")
+    private int serviceProviderQualification;
+
+    @Column(name = "client_qualification")
+    private int clientQualification;
+
     @Transient
     @IDatePeriod(message = "Período de datas inválido.")
     private Period periodDate;
@@ -60,7 +75,7 @@ public class Project implements Serializable {
     @JoinColumn(name = "service_provider_id")
     @NotNull(message = "O prestador de serviços deve ser indormado.")
     @IServiceProvider(message = "Prestador de serviços inválido.")
-    private ServiceProvider sericeProvider;
+    private ServiceProvider serviceProvider;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
@@ -83,6 +98,10 @@ public class Project implements Serializable {
     @ManyToOne
     @JoinColumn(name = "status")
     private ProjectStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id")
+    private List<ProjectPortfolio> portfolio;
 
     public Project() {
     }
@@ -143,12 +162,12 @@ public class Project implements Serializable {
         this.client = client;
     }
 
-    public ServiceProvider getSericeProvider() {
-        return sericeProvider;
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
     }
 
-    public void setSericeProvider(ServiceProvider sericeProvider) {
-        this.sericeProvider = sericeProvider;
+    public void setSericeProvider(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
     }
 
     public City getCity() {
@@ -189,6 +208,46 @@ public class Project implements Serializable {
 
     public void setStatus(ProjectStatus status) {
         this.status = status;
+    }
+
+    public List<ProjectPortfolio> getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(List<ProjectPortfolio> portfolio) {
+        this.portfolio = portfolio;
+    }
+
+    public String getServiceProviderEvaluation() {
+        return serviceProviderEvaluation;
+    }
+
+    public void setServiceProviderEvaluation(String serviceProviderEvaluation) {
+        this.serviceProviderEvaluation = serviceProviderEvaluation;
+    }
+
+    public String getClientEvaluation() {
+        return clientEvaluation;
+    }
+
+    public void setClientEvaluation(String clientEvaluation) {
+        this.clientEvaluation = clientEvaluation;
+    }
+
+    public int getServiceProviderQualification() {
+        return serviceProviderQualification;
+    }
+
+    public void setServiceProviderQualification(int serviceProviderQualification) {
+        this.serviceProviderQualification = serviceProviderQualification;
+    }
+
+    public int getClientQualification() {
+        return clientQualification;
+    }
+
+    public void setClientQualification(int clientQualification) {
+        this.clientQualification = clientQualification;
     }
 
 }

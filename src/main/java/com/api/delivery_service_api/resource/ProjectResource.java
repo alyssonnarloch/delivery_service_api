@@ -10,6 +10,7 @@ import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.modelaux.Period;
 import com.google.gson.Gson;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -17,15 +18,19 @@ import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.Validator;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 @Path("project")
 public class ProjectResource {
@@ -37,6 +42,7 @@ public class ProjectResource {
     }
 
     @POST
+    @Path("/new")
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(@FormParam("title") String title,
             @FormParam("description") String description,
@@ -49,14 +55,13 @@ public class ProjectResource {
             @FormParam("start_at") DateParam startAt,
             @FormParam("end_at") DateParam endAt) {
 
-
         Gson gson = new Gson();
-        
+
         HashMap<String, String> errors = new HashMap();
         Validator validator;
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        
+
         Project project = new Project();
 
         project.setClient(new Client(clientId));
@@ -111,4 +116,75 @@ public class ProjectResource {
 
         return Response.ok().build();
     }
+
+    @GET
+    @Path("/client")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response clientProjects(@QueryParam("client_id") int clientId,
+            @QueryParam("status") int status) {
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            Criteria criteria = s.createCriteria(Project.class, "p")
+                    .createAlias("status", "s")
+                    .add(Restrictions.eq("p.client.id", clientId));
+
+            if (status > 0) {
+                criteria.add(Restrictions.eq("s.id", status));
+            }
+
+            List<Project> projects = criteria.list();
+
+            t.commit();
+
+            return Response.ok(gson.toJson(projects)).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.flush();
+            s.close();
+        }
+    }
+
+    @GET
+    @Path("/service_provider")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response serviceProviderProjects(@QueryParam("service_provider_id") int serviceProviderId,
+            @QueryParam("status") int status) {
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            Criteria criteria = s.createCriteria(Project.class, "p")
+                    .createAlias("status", "s")
+                    .add(Restrictions.eq("p.serviceProvider.id", serviceProviderId));
+
+            if (status > 0) {
+                criteria.add(Restrictions.eq("s.id", status));
+            }
+
+            List<Project> projects = criteria.list();
+
+            t.commit();
+
+            return Response.ok(gson.toJson(projects)).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.flush();
+            s.close();
+        }
+    }
+
 }
