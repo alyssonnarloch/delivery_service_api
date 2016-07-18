@@ -28,3 +28,7 @@ http://www.programcreek.com/java-api-examples/index.php?source_dir=spark-jwt-aut
 Hibernate Validator
 	https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Web_Platform/5/html-single/Hibernate_Validator_Reference_Guide/index.html#idm84913344
 	https://docs.oracle.com/javaee/7/api/javax/validation/constraints/package-summary.html
+
+Ignore Validation
+	http://in.relation.to/2008/04/10/bean-validation-sneak-peek-part-iii-groups-and-partial-validation/
+	http://stackoverflow.com/questions/4533130/using-hibernate-validator-without-calling-annotation
