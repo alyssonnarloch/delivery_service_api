@@ -10,8 +10,6 @@
     <!--<property name="hibernate.hbm2ddl.auto">update</property>-->
     <mapping class="com.api.delivery_service_api.model.City"/>
     <mapping class="com.api.delivery_service_api.model.Client"/>
-    <mapping class="com.api.delivery_service_api.model.ClientEvaluation"/>
-    <mapping class="com.api.delivery_service_api.model.ServiceProviderEvaluation"/>
     <mapping class="com.api.delivery_service_api.model.Project"/>
     <mapping class="com.api.delivery_service_api.model.ProjectPortfolio"/>
     <mapping class="com.api.delivery_service_api.model.ProjectStatus"/>

@@ -4,7 +4,9 @@ import com.api.delivery_service_api.custom_validation.ICity;
 import com.api.delivery_service_api.custom_validation.IClient;
 import com.api.delivery_service_api.custom_validation.IDatePeriod;
 import com.api.delivery_service_api.custom_validation.INotEmpty;
+import com.api.delivery_service_api.custom_validation.ISave;
 import com.api.delivery_service_api.custom_validation.IServiceProvider;
+import com.api.delivery_service_api.custom_validation.IUpdate;
 import com.api.delivery_service_api.custom_validation.IZipCode;
 import com.api.delivery_service_api.modelaux.Period;
 import java.io.Serializable;
@@ -33,11 +35,11 @@ public class Project implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @INotEmpty(message = "O título deve ser informado.")
+    @INotEmpty(message = "O título deve ser informado.", groups={ISave.class, IUpdate.class})
     @Size(min = 5, message = "Título inválido.")
     private String title;
 
-    @INotEmpty(message = "A descrição eve ser informada.")
+    @INotEmpty(message = "A descrição eve ser informada.", groups={ISave.class})
     @Size(min = 5, message = "Descrição inválida.")
     private String description;
 
@@ -62,33 +64,33 @@ public class Project implements Serializable {
     private Integer clientQualification;
 
     @Transient
-    @IDatePeriod(message = "Período de datas inválido.")
+    @IDatePeriod(message = "Período de datas inválido.", groups={ISave.class})
     private Period periodDate;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
     @NotNull(message = "O cliente deve ser indormado.")
-    @IClient(message = "Cliente inválido.")
+    @IClient(message = "Cliente inválido.", groups={ISave.class})
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "service_provider_id")
     @NotNull(message = "O prestador de serviços deve ser indormado.")
-    @IServiceProvider(message = "Prestador de serviços inválido.")
+    @IServiceProvider(message = "Prestador de serviços inválido.", groups={ISave.class})
     private ServiceProvider serviceProvider;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
     @NotNull(message = "A cidade deve ser informada.")
-    @ICity(message = "Cidade inválida.")
+    @ICity(message = "Cidade inválida.", groups={ISave.class})
     private City city;
 
     @Column(name = "zip_code")
-    @INotEmpty(message = "O CEP deve ser informado.")
-    @IZipCode(message = "CEP inválido.")
+    @INotEmpty(message = "O CEP deve ser informado.", groups={ISave.class})
+    @IZipCode(message = "CEP inválido.", groups={ISave.class})
     private String zipCode;
 
-    @INotEmpty(message = "O endereço deve ser informado.")
+    @INotEmpty(message = "O endereço deve ser informado.", groups={ISave.class})
     @Size(min = 5, message = "Endereço inválido.")
     private String address;
 

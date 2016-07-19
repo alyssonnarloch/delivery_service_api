@@ -11,6 +11,7 @@ public class NotEmptyValidator implements ConstraintValidator<INotEmpty, String>
 
     @Override
     public boolean isValid(String text, ConstraintValidatorContext cvc) {
+        System.out.println("OIEEEEEEEEEEEEEEEE");
         return text != null && !text.equals("");
     }
 

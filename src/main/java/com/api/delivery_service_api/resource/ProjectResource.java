@@ -1,5 +1,6 @@
 package com.api.delivery_service_api.resource;
 
+import com.api.delivery_service_api.custom_validation.IUpdate;
 import com.api.delivery_service_api.extras.DateParam;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
@@ -199,9 +200,16 @@ public class ProjectResource {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
         //Evita atualização automática das entidades
-        s.setFlushMode(FlushMode.MANUAL);
+//        s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
+        HashMap<String, String> errors = new HashMap();
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+        
+        Gson gson = new Gson();
+        
         try {
             Project project = (Project) s.get(Project.class, projectId);
 
@@ -220,8 +228,27 @@ public class ProjectResource {
                 project.setServiceProviderEvaluation(description);
                 project.setServiceProviderQualification(qualification);
             }
+project.setTitle("");
+            Set<ConstraintViolation<Project>> constraintViolations = validator.validate(project, IUpdate.class);
 
+            for (ConstraintViolation<Project> c : constraintViolations) {
+                System.out.println("UIAAAAAAAAAAAAAAAAAAAA");
+                String attrName = c.getPropertyPath().toString();
+
+                if (errors.get(attrName) != null) {
+                    errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+                } else {
+                    errors.put(attrName, c.getMessage());
+                }
+            }
+
+            if (errors.size() > 0) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("VIADO").build();
+            }
+
+            System.out.println("FDP1");
             s.update(project);
+            System.out.println("FDP2");
 
             t.commit();
         } catch (Exception ex) {

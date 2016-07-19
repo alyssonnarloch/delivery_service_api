@@ -15,7 +15,7 @@ public class DatePeriodValidator implements ConstraintValidator<IDatePeriod, Per
     @Override
     public boolean isValid(Period p, ConstraintValidatorContext cvc) {
         Date today = new Date();
-
+System.out.println("IRRRAAAAAAAAAAAAAAA");
         return p.getStartAt() != null && p.getEndAt() != null && p.getStartAt().getTime() >= today.getTime() && p.getEndAt().getTime() > p.getStartAt().getTime();
     }
 
