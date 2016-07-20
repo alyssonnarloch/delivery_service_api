@@ -23,6 +23,8 @@ public class CityValidator implements ConstraintValidator<ICity, City> {
         try {
             City city = (City) s.get(City.class, c.getId());
 
+            this.s.flush();
+            this.s.clear();
             this.t.commit();
 
             if (city != null) {
@@ -31,7 +33,6 @@ public class CityValidator implements ConstraintValidator<ICity, City> {
         } catch (Exception ex) {
             this.t.rollback();
         } finally {
-            this.s.flush();
             this.s.close();
         }
 

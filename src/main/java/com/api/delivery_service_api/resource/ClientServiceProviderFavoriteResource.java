@@ -56,6 +56,8 @@ public class ClientServiceProviderFavoriteResource {
 
             List<ClientServiceProviderFavorite> favorites = criteria.list();
 
+            s.flush();
+            s.clear();
             t.commit();
 
             return Response.ok(gson.toJson(favorites)).build();
@@ -64,7 +66,6 @@ public class ClientServiceProviderFavoriteResource {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
     }
@@ -93,6 +94,8 @@ public class ClientServiceProviderFavoriteResource {
 
             List<ClientServiceProviderFavorite> favorites = criteria.list();
 
+            s.flush();
+            s.clear();
             t.commit();
 
             if (favorites.isEmpty()) {
@@ -105,7 +108,6 @@ public class ClientServiceProviderFavoriteResource {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
     }
@@ -130,13 +132,15 @@ public class ClientServiceProviderFavoriteResource {
             favorite.setServiceProvider(new ServiceProvider(serviceProviderId));
 
             s.save(favorite);
+
+            s.flush();
+            s.clear();
             t.commit();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
 
@@ -158,6 +162,9 @@ public class ClientServiceProviderFavoriteResource {
             ClientServiceProviderFavorite favorite = (ClientServiceProviderFavorite) s.get(ClientServiceProviderFavorite.class, id);
 
             s.delete(favorite);
+            
+            s.flush();
+            s.clear();
             t.commit();
         } catch (IllegalArgumentException iex) {
             t.rollback();
@@ -168,7 +175,6 @@ public class ClientServiceProviderFavoriteResource {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
 

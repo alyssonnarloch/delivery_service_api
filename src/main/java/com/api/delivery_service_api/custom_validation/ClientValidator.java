@@ -23,6 +23,8 @@ public class ClientValidator implements ConstraintValidator<IClient, Client> {
         try {
             Client client = (Client) s.get(Client.class, c.getId());
 
+            this.s.flush();
+            this.s.clear();
             this.t.commit();
 
             if (client != null) {
@@ -31,7 +33,6 @@ public class ClientValidator implements ConstraintValidator<IClient, Client> {
         } catch (Exception ex) {
             this.t.rollback();
         } finally {
-            this.s.flush();
             this.s.close();
         }
 

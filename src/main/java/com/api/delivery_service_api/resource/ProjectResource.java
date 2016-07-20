@@ -1,5 +1,6 @@
 package com.api.delivery_service_api.resource;
 
+import com.api.delivery_service_api.custom_validation.ISave;
 import com.api.delivery_service_api.custom_validation.IUpdate;
 import com.api.delivery_service_api.extras.DateParam;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
@@ -30,7 +31,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -83,7 +83,7 @@ public class ProjectResource {
 
         project.setStatus(new ProjectStatus(1));
 
-        Set<ConstraintViolation<Project>> constraintViolations = validator.validate(project);
+        Set<ConstraintViolation<Project>> constraintViolations = validator.validate(project, ISave.class);
 
         for (ConstraintViolation<Project> c : constraintViolations) {
             String attrName = c.getPropertyPath().toString();
@@ -108,7 +108,7 @@ public class ProjectResource {
         } catch (ConstraintViolationException cve) {
             t.rollback();
             cve.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviços ou Cidade inválidos.").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviÃ§os ou Cidade invÃ¡lidos.").build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -199,7 +199,7 @@ public class ProjectResource {
             @FormParam("profile_id") int profileId) {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualização automática das entidades
+        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
 //        s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
@@ -214,7 +214,7 @@ public class ProjectResource {
             Project project = (Project) s.get(Project.class, projectId);
 
             if (project == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto não encontrado.").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto nÃ£o encontrado.").build();
             }
 
             project.setPeriodDate(new Period(project.getStartAt(), project.getEndAt()));
@@ -228,11 +228,10 @@ public class ProjectResource {
                 project.setServiceProviderEvaluation(description);
                 project.setServiceProviderQualification(qualification);
             }
-project.setTitle("");
+
             Set<ConstraintViolation<Project>> constraintViolations = validator.validate(project, IUpdate.class);
 
             for (ConstraintViolation<Project> c : constraintViolations) {
-                System.out.println("UIAAAAAAAAAAAAAAAAAAAA");
                 String attrName = c.getPropertyPath().toString();
 
                 if (errors.get(attrName) != null) {
@@ -243,20 +242,19 @@ project.setTitle("");
             }
 
             if (errors.size() > 0) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("VIADO").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
             }
 
-            System.out.println("FDP1");
             s.update(project);
-            System.out.println("FDP2");
 
+            s.flush();
+            s.clear();
             t.commit();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
 

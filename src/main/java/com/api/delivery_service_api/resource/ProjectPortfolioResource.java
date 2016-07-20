@@ -37,6 +37,8 @@ public class ProjectPortfolioResource {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Portifólio do projeto não encontrado.").build();
             }
 
+            s.flush();
+            s.clear();
             t.commit();
 
             return Response.ok(projectPortfolio).build();
@@ -45,7 +47,6 @@ public class ProjectPortfolioResource {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
     }
@@ -67,6 +68,9 @@ public class ProjectPortfolioResource {
 
             projectPortfolio.setApproved(newStatus);
             s.save(projectPortfolio);
+            
+            s.flush();
+            s.clear();
             t.commit();
 
             return Response.ok().build();
@@ -75,7 +79,6 @@ public class ProjectPortfolioResource {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
     }

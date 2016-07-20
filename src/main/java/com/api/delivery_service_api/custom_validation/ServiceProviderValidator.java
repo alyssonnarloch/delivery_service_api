@@ -23,6 +23,8 @@ public class ServiceProviderValidator implements ConstraintValidator<IServicePro
         try {
             ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, sp.getId());
 
+            this.s.flush();
+            this.s.clear();
             this.t.commit();
 
             if (serviceProvider != null) {
@@ -31,7 +33,6 @@ public class ServiceProviderValidator implements ConstraintValidator<IServicePro
         } catch (Exception ex) {
             this.t.rollback();
         } finally {
-            this.s.flush();
             this.s.close();
         }
 

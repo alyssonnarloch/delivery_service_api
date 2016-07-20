@@ -36,19 +36,19 @@ public class Project implements Serializable {
     private int id;
 
     @INotEmpty(message = "O título deve ser informado.", groups={ISave.class, IUpdate.class})
-    @Size(min = 5, message = "Título inválido.")
+    @Size(min = 5, message = "Título inválido.", groups={ISave.class, IUpdate.class})
     private String title;
 
-    @INotEmpty(message = "A descrição eve ser informada.", groups={ISave.class})
-    @Size(min = 5, message = "Descrição inválida.")
+    @INotEmpty(message = "A descrição eve ser informada.", groups={ISave.class, IUpdate.class})
+    @Size(min = 5, message = "Descrição inválida.", groups={ISave.class, IUpdate.class})
     private String description;
 
     @Column(name = "start_at")
-    @NotNull(message = "A data de início deve ser informada.")
+    @NotNull(message = "A data de início deve ser informada.", groups={ISave.class, IUpdate.class})
     private Date startAt;
 
     @Column(name = "end_at")
-    @NotNull(message = "A data de término deve ser informada.")
+    @NotNull(message = "A data de término deve ser informada.", groups={ISave.class, IUpdate.class})
     private Date endAt;
 
     @Column(name = "service_provider_evaluation")
@@ -69,32 +69,32 @@ public class Project implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    @NotNull(message = "O cliente deve ser indormado.")
-    @IClient(message = "Cliente inválido.", groups={ISave.class})
+    @NotNull(message = "O cliente deve ser indormado.", groups={ISave.class, IUpdate.class})
+    @IClient(message = "Cliente inválido.", groups={ISave.class, IUpdate.class})
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "service_provider_id")
-    @NotNull(message = "O prestador de serviços deve ser indormado.")
-    @IServiceProvider(message = "Prestador de serviços inválido.", groups={ISave.class})
+    @NotNull(message = "O prestador de serviços deve ser informado.", groups={ISave.class, IUpdate.class})
+    @IServiceProvider(message = "Prestador de serviços inválido.", groups={ISave.class, IUpdate.class})
     private ServiceProvider serviceProvider;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
-    @NotNull(message = "A cidade deve ser informada.")
-    @ICity(message = "Cidade inválida.", groups={ISave.class})
+    @NotNull(message = "A cidade deve ser informada.", groups={ISave.class, IUpdate.class})
+    @ICity(message = "Cidade inválida.", groups={ISave.class, IUpdate.class})
     private City city;
 
     @Column(name = "zip_code")
-    @INotEmpty(message = "O CEP deve ser informado.", groups={ISave.class})
-    @IZipCode(message = "CEP inválido.", groups={ISave.class})
+    @INotEmpty(message = "O CEP deve ser informado.", groups={ISave.class, IUpdate.class})
+    @IZipCode(message = "CEP inválido.", groups={ISave.class, IUpdate.class})
     private String zipCode;
 
-    @INotEmpty(message = "O endereço deve ser informado.", groups={ISave.class})
-    @Size(min = 5, message = "Endereço inválido.")
+    @INotEmpty(message = "O endereço deve ser informado.", groups={ISave.class, IUpdate.class})
+    @Size(min = 5, message = "Endereço inválido.", groups={ISave.class, IUpdate.class})
     private String address;
 
-    @Min(value = 1, message = "Número inválido.")
+    @Min(value = 1, message = "Número inválido.", groups={ISave.class, IUpdate.class})
     private int number;
 
     @ManyToOne

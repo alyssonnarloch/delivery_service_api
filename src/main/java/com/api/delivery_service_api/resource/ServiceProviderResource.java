@@ -98,6 +98,8 @@ public class ServiceProviderResource {
                 servicesProvider.add(serviceProviderAux);
             }
 
+            s.flush();
+            s.clear();
             t.commit();
 
             return Response.ok(gson.toJson(servicesProvider)).build();
@@ -106,7 +108,6 @@ public class ServiceProviderResource {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
     }
@@ -131,14 +132,16 @@ public class ServiceProviderResource {
 
             serviceProvider.setPassword("**********************");
 
+            s.flush();
+            s.clear();
             t.commit();
+
             return Response.ok(gson.toJson(serviceProvider)).build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
     }
@@ -191,11 +194,11 @@ public class ServiceProviderResource {
 
         for (ConstraintViolation<ServiceProvider> c : constraintViolations) {
             String attrName = c.getPropertyPath().toString();
-            
-            if(attrName != null && attrName.isEmpty()) {
+
+            if (attrName != null && attrName.isEmpty()) {
                 attrName = c.getRootBeanClass().getSimpleName();
             }
-            
+
             if (errors.get(attrName) != null) {
                 errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
             } else {
@@ -224,6 +227,9 @@ public class ServiceProviderResource {
             }
 
             s.save(serviceProvider);
+
+            s.flush();
+            s.clear();
             t.commit();
         } catch (Exception ex) {
             t.rollback();
