@@ -43,7 +43,7 @@ public class ClientServiceProviderFavoriteResource {
         }
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-        s.setFlushMode(FlushMode.MANUAL);
+        //s.setFlushMode(FlushMode.MANUAL);
 
         Transaction t = s.beginTransaction();
 
@@ -56,7 +56,7 @@ public class ClientServiceProviderFavoriteResource {
 
             List<ClientServiceProviderFavorite> favorites = criteria.list();
 
-            s.flush();
+            //s.flush();
             s.clear();
             t.commit();
 
@@ -81,7 +81,7 @@ public class ClientServiceProviderFavoriteResource {
         }
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-        s.setFlushMode(FlushMode.MANUAL);
+        //s.setFlushMode(FlushMode.MANUAL);
 
         Transaction t = s.beginTransaction();
 
@@ -94,7 +94,7 @@ public class ClientServiceProviderFavoriteResource {
 
             List<ClientServiceProviderFavorite> favorites = criteria.list();
 
-            s.flush();
+            //s.flush();
             s.clear();
             t.commit();
 

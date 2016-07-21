@@ -2,7 +2,6 @@ package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
-import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.model.ServiceProviderPortfolio;
 import com.api.delivery_service_api.model.ServiceType;
@@ -98,7 +97,6 @@ public class ServiceProviderResource {
                 servicesProvider.add(serviceProviderAux);
             }
 
-            s.flush();
             s.clear();
             t.commit();
 
@@ -118,7 +116,7 @@ public class ServiceProviderResource {
     public Response getById(@PathParam("id") int id) {
         Session s = HibernateUtil.getSessionFactory().openSession();
         //Evita atualização automática das entidades
-        s.setFlushMode(FlushMode.MANUAL);
+        //s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
         Gson gson = new Gson();
@@ -127,12 +125,11 @@ public class ServiceProviderResource {
             ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
 
             if (serviceProvider == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("NÃ£o existe prestador de serviÃ§o associado ao id " + id + ".").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("Não existe prestador de serviço associado ao id " + id + ".").build();
             }
 
             serviceProvider.setPassword("**********************");
 
-            s.flush();
             s.clear();
             t.commit();
 

@@ -108,7 +108,7 @@ public class ProjectResource {
         } catch (ConstraintViolationException cve) {
             t.rollback();
             cve.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviÃ§os ou Cidade invÃ¡lidos.").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviços ou Cidade inválidos.").build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -142,6 +142,7 @@ public class ProjectResource {
 
             List<Project> projects = criteria.list();
 
+            s.clear();
             t.commit();
 
             return Response.ok(gson.toJson(projects)).build();
@@ -150,7 +151,6 @@ public class ProjectResource {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
             s.close();
         }
     }
@@ -177,6 +177,7 @@ public class ProjectResource {
 
             List<Project> projects = criteria.list();
 
+            s.clear();
             t.commit();
 
             return Response.ok(gson.toJson(projects)).build();
@@ -185,7 +186,39 @@ public class ProjectResource {
             ex.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.flush();
+            s.close();
+        }
+    }
+
+    @GET
+    @Path("/service_provider/evaluation")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response serviceProviderEvaluations(@QueryParam("service_provider_id") int serviceProviderId) {
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            Criteria criteria = s.createCriteria(Project.class, "p")
+                    .createAlias("status", "s")
+                    .add(Restrictions.eq("s.id", 4))
+                    .add(Restrictions.eq("p.serviceProvider.id", serviceProviderId))
+                    .add(Restrictions.isNotEmpty("p.serviceProviderEvaluation"))
+                    .add(Restrictions.isNotEmpty("p.serviceProviderQualification"));
+
+            List<Project> projects = criteria.list();
+
+            s.clear();
+            t.commit();
+
+            return Response.ok(gson.toJson(projects)).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
             s.close();
         }
     }
@@ -199,7 +232,7 @@ public class ProjectResource {
             @FormParam("profile_id") int profileId) {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
+        //Evita atualização automática das entidades
 //        s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
@@ -207,14 +240,14 @@ public class ProjectResource {
         Validator validator;
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        
+
         Gson gson = new Gson();
-        
+
         try {
             Project project = (Project) s.get(Project.class, projectId);
 
             if (project == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto nÃ£o encontrado.").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto não encontrado.").build();
             }
 
             project.setPeriodDate(new Period(project.getStartAt(), project.getEndAt()));

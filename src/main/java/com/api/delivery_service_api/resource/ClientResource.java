@@ -3,7 +3,6 @@ package com.api.delivery_service_api.resource;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.City;
-import com.api.delivery_service_api.model.Project;
 import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Set;
@@ -39,8 +38,8 @@ public class ClientResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") int id) {
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
-        s.setFlushMode(FlushMode.MANUAL);
+        //Evita atualização automática das entidades
+        //s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
         Gson gson = new Gson();
@@ -49,12 +48,11 @@ public class ClientResource {
             Client client = (Client) s.get(Client.class, id);
 
             if (client == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("NÃ£o existe cliente associado ao id " + id + ".").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("Não existe cliente associado ao id " + id + ".").build();
             }
 
             client.setPassword("**********************");
 
-            s.flush();
             s.clear();
             t.commit();
 

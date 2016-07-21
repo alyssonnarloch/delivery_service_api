@@ -37,7 +37,7 @@ public class ProjectPortfolioResource {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Portifólio do projeto não encontrado.").build();
             }
 
-            s.flush();
+            //s.flush();
             s.clear();
             t.commit();
 
