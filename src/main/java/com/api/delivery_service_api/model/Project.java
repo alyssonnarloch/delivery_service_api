@@ -10,6 +10,7 @@ import com.api.delivery_service_api.custom_validation.IUpdate;
 import com.api.delivery_service_api.custom_validation.IZipCode;
 import com.api.delivery_service_api.modelaux.Period;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -106,6 +107,7 @@ public class Project implements Serializable {
     private List<ProjectPortfolio> portfolio;
 
     public Project() {
+        this.portfolio = new ArrayList();
     }
 
     public int getId() {

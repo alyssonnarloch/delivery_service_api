@@ -12,7 +12,6 @@ import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.modelaux.Period;
 import com.google.gson.Gson;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -31,6 +30,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -108,7 +108,7 @@ public class ProjectResource {
         } catch (ConstraintViolationException cve) {
             t.rollback();
             cve.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviços ou Cidade inválidos.").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviÃ§os ou Cidade invÃ¡lidos.").build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -140,12 +140,13 @@ public class ProjectResource {
                 criteria.add(Restrictions.eq("s.id", status));
             }
 
-            List<Project> projects = criteria.list();
+            //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
+            String projectsJson = gson.toJson(criteria.list());
 
             s.clear();
             t.commit();
 
-            return Response.ok(gson.toJson(projects)).build();
+            return Response.ok(projectsJson).build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -175,12 +176,13 @@ public class ProjectResource {
                 criteria.add(Restrictions.eq("s.id", status));
             }
 
-            List<Project> projects = criteria.list();
+            //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
+            String projectsJson = gson.toJson(criteria.list());
 
             s.clear();
             t.commit();
 
-            return Response.ok(gson.toJson(projects)).build();
+            return Response.ok(projectsJson).build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -191,7 +193,7 @@ public class ProjectResource {
     }
 
     @GET
-    @Path("/service_provider/evaluation")
+    @Path("/service_provider/evaluations")
     @Produces(MediaType.APPLICATION_JSON)
     public Response serviceProviderEvaluations(@QueryParam("service_provider_id") int serviceProviderId) {
 
@@ -205,15 +207,50 @@ public class ProjectResource {
                     .createAlias("status", "s")
                     .add(Restrictions.eq("s.id", 4))
                     .add(Restrictions.eq("p.serviceProvider.id", serviceProviderId))
-                    .add(Restrictions.isNotEmpty("p.serviceProviderEvaluation"))
-                    .add(Restrictions.isNotEmpty("p.serviceProviderQualification"));
+                    .add(Restrictions.isNotNull("p.serviceProviderEvaluation"))
+                    .add(Restrictions.isNotNull("p.serviceProviderQualification"));
 
-            List<Project> projects = criteria.list();
+            //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
+            String projectsJson = gson.toJson(criteria.list());
 
             s.clear();
             t.commit();
 
-            return Response.ok(gson.toJson(projects)).build();
+            return Response.ok(projectsJson).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
+    }
+
+    @GET
+    @Path("/client/evaluations")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response clientEvaluations(@QueryParam("client_id") int clientId) {
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            Criteria criteria = s.createCriteria(Project.class, "p")
+                    .createAlias("status", "s")
+                    .add(Restrictions.eq("s.id", 4))
+                    .add(Restrictions.eq("p.client.id", clientId))
+                    .add(Restrictions.isNotNull("p.clientEvaluation"))
+                    .add(Restrictions.isNotNull("p.clientQualification"));
+
+            //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
+            String projectsJson = gson.toJson(criteria.list());
+
+            s.clear();
+            t.commit();
+
+            return Response.ok(projectsJson).build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -224,7 +261,7 @@ public class ProjectResource {
     }
 
     @PUT
-    @Path("/evaluation")
+    @Path("/close")
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@FormParam("project_id") int projectId,
             @FormParam("qualification") int qualification,
@@ -232,7 +269,7 @@ public class ProjectResource {
             @FormParam("profile_id") int profileId) {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualização automática das entidades
+        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
 //        s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
@@ -247,7 +284,7 @@ public class ProjectResource {
             Project project = (Project) s.get(Project.class, projectId);
 
             if (project == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto não encontrado.").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto nÃ£o encontrado.").build();
             }
 
             project.setPeriodDate(new Period(project.getStartAt(), project.getEndAt()));
