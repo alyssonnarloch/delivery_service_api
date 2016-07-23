@@ -4,11 +4,14 @@ import com.api.delivery_service_api.custom_validation.IListNotEmpty;
 import com.api.delivery_service_api.custom_validation.INotEmpty;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -37,23 +40,23 @@ public class ServiceProvider extends User {
     @IListNotEmpty(message = "As imagens do portifólio devem ser adicionadas.")
     private List<String> profilePortfolioSrc;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "service_provider_service_types",
             joinColumns = @JoinColumn(name = "service_provider_id"),
             inverseJoinColumns = @JoinColumn(name = "service_type_id"))
-    private List<ServiceType> servicesType;
+    private Set<ServiceType> servicesType;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "service_provider_occupation_areas",
             joinColumns = @JoinColumn(name = "service_provider_id"),
             inverseJoinColumns = @JoinColumn(name = "city_id"))
-    private List<City> occupationAreas;
+    private Set<City> occupationAreas;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "service_provider_id")
-    private List<ServiceProviderPortfolio> portfolio;
+    private Set<ServiceProviderPortfolio> portfolio;
 
     @Transient
     private double qualificationAvg;
@@ -62,9 +65,9 @@ public class ServiceProvider extends User {
         this.serviceTypeIds = new ArrayList();
         this.occupationAreaIds = new ArrayList();
         this.profilePortfolioSrc = new ArrayList();
-        this.servicesType = new ArrayList();
-        this.occupationAreas = new ArrayList();
-        this.portfolio = new ArrayList();
+        this.servicesType = new HashSet();
+        this.occupationAreas = new HashSet();
+        this.portfolio = new HashSet();
     }
 
     public ServiceProvider(int id) {
@@ -72,9 +75,9 @@ public class ServiceProvider extends User {
         this.serviceTypeIds = new ArrayList();
         this.occupationAreaIds = new ArrayList();
         this.profilePortfolioSrc = new ArrayList();
-        this.servicesType = new ArrayList();
-        this.occupationAreas = new ArrayList();
-        this.portfolio = new ArrayList();
+        this.servicesType = new HashSet();
+        this.occupationAreas = new HashSet();
+        this.portfolio = new HashSet();
     }
 
     public String getExperienceDescription() {
@@ -121,15 +124,15 @@ public class ServiceProvider extends User {
         this.profilePortfolioSrc = profilePortfolioSrc;
     }
 
-    public List<ServiceType> getServicesType() {
+    public Set<ServiceType> getServicesType() {
         return servicesType;
     }
 
-    public void setServicesType(List<ServiceType> servicesType) {
+    public void setServicesType(Set<ServiceType> servicesType) {
         this.servicesType = servicesType;
     }
 
-    public List<City> getOccupationAreas() {
+    public Set<City> getOccupationAreas() {
         return occupationAreas;
     }
 
@@ -141,15 +144,15 @@ public class ServiceProvider extends User {
         this.qualificationAvg = qualificationAvg;
     }
 
-    public void setOccupationAreas(List<City> occupationAreas) {
+    public void setOccupationAreas(Set<City> occupationAreas) {
         this.occupationAreas = occupationAreas;
     }
 
-    public List<ServiceProviderPortfolio> getPortfolio() {
+    public Set<ServiceProviderPortfolio> getPortfolio() {
         return portfolio;
     }
 
-    public void setPortfolio(List<ServiceProviderPortfolio> portfolio) {
+    public void setPortfolio(Set<ServiceProviderPortfolio> portfolio) {
         this.portfolio = portfolio;
     }
 

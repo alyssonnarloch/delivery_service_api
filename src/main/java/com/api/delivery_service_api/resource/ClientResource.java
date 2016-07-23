@@ -1,5 +1,6 @@
 package com.api.delivery_service_api.resource;
 
+import com.api.delivery_service_api.custom_validation.ISave;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.City;
@@ -20,7 +21,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -100,7 +100,7 @@ public class ClientResource {
         client.setPassword(password);
         client.setProfileImage(profileImage);
 
-        Set<ConstraintViolation<Client>> constraintViolations = validator.validate(client);
+        Set<ConstraintViolation<Client>> constraintViolations = validator.validate(client, ISave.class);
 
         for (ConstraintViolation<Client> c : constraintViolations) {
             String attrName = c.getPropertyPath().toString();

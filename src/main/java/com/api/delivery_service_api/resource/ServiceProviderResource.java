@@ -1,7 +1,9 @@
 package com.api.delivery_service_api.resource;
 
+import com.api.delivery_service_api.custom_validation.ISave;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
+import com.api.delivery_service_api.model.Project;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.model.ServiceProviderPortfolio;
 import com.api.delivery_service_api.model.ServiceType;
@@ -26,7 +28,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
@@ -60,14 +61,14 @@ public class ServiceProviderResource {
         Gson gson = new Gson();
 
         try {
-            Criteria criteria = s.createCriteria(ServiceProvider.class, "sp")
-                    .createAlias("servicesType", "st")
-                    .createAlias("occupationAreas", "oa")
-                    .createAlias("evaluation", "e")
+            Criteria criteria = s.createCriteria(Project.class, "p")
+                    .createAlias("serviceProvider", "sp")
+                    .createAlias("sp.occupationAreas", "oa")
+                    .createAlias("sp.servicesType", "st")
                     .setProjection(Projections.projectionList()
                             .add(Projections.property("sp.name"), "name")
                             .add(Projections.groupProperty("sp.id"), "id")
-                            .add(Projections.avg("e.qualification"), "qualificationAvg"))
+                            .add(Projections.avg("p.serviceProviderQualification"), "qualificationAvg"))
                     .addOrder(Order.desc("qualificationAvg"))
                     .setResultTransformer(Transformers.aliasToBean(ServiceProvider.class));
 
@@ -187,7 +188,7 @@ public class ServiceProviderResource {
         serviceProvider.setOccupationAreaIds(occupationAreas);
         serviceProvider.setProfilePortfolioSrc(profilePortfolio);
 
-        Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider);
+        Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider, ISave.class);
 
         for (ConstraintViolation<ServiceProvider> c : constraintViolations) {
             String attrName = c.getPropertyPath().toString();

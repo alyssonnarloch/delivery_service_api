@@ -2,6 +2,7 @@ package com.api.delivery_service_api.model;
 
 import com.api.delivery_service_api.custom_validation.IEmail;
 import com.api.delivery_service_api.custom_validation.INotEmpty;
+import com.api.delivery_service_api.custom_validation.ISave;
 import com.api.delivery_service_api.custom_validation.IUserNotExists;
 import com.api.delivery_service_api.custom_validation.IZipCode;
 import java.io.Serializable;
@@ -23,22 +24,22 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "users")
 @DiscriminatorColumn(name = "profile_id", discriminatorType = DiscriminatorType.INTEGER)
-@IUserNotExists(message = "E-mail já utilizado por outro usuário.")
+@IUserNotExists(message = "E-mail já utilizado por outro usuário.", groups = {ISave.class})
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @INotEmpty(message = "O nome deve ser informado.")
-    @Size(min = 5, message = "Nome inválido.")
+    @INotEmpty(message = "O nome deve ser informado.", groups = {ISave.class})
+    @Size(min = 5, message = "Nome inválido.", groups = {ISave.class})
     private String name;
 
-    @INotEmpty(message = "O e-mail deve ser informado.")
-    @IEmail(message = "E-mail inválido.")
+    @INotEmpty(message = "O e-mail deve ser informado.", groups = {ISave.class})
+    @IEmail(message = "E-mail inválido.", groups = {ISave.class})
     private String email;
 
-    @INotEmpty(message = "O telefone deve ser informado.")
+    @INotEmpty(message = "O telefone deve ser informado.", groups = {ISave.class})
     private String phone;
 
     @ManyToOne
@@ -46,22 +47,22 @@ public class User implements Serializable {
     private City city;
 
     @Column(name = "zip_code")
-    @INotEmpty(message = "O CEP deve ser informado.")
-    @IZipCode(message = "CEP inválido.")
+    @INotEmpty(message = "O CEP deve ser informado.", groups = {ISave.class})
+    @IZipCode(message = "CEP inválido.", groups = {ISave.class})
     private String zipCode;
 
-    @INotEmpty(message = "O endereço deve ser informado.")
-    @Size(min = 5, message = "Endereço inválido.")
+    @INotEmpty(message = "O endereço deve ser informado.", groups = {ISave.class})
+    @Size(min = 5, message = "Endereço inválido.", groups = {ISave.class})
     private String address;
 
-    @Min(value = 1, message = "Número inválido.")
+    @Min(value = 1, message = "Número inválido.", groups = {ISave.class})
     private int number;
 
     @Column(name = "profile_image", length = 1500)
     private String profileImage;
 
-    @INotEmpty(message = "A senha deve ser informada.")
-    @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres.")
+    @INotEmpty(message = "A senha deve ser informada.", groups = {ISave.class})
+    @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres.", groups = {ISave.class})
     private String password;
 
     public User() {
