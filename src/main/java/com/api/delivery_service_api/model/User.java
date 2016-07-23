@@ -1,5 +1,6 @@
 package com.api.delivery_service_api.model;
 
+import com.api.delivery_service_api.custom_validation.ICity;
 import com.api.delivery_service_api.custom_validation.IEmail;
 import com.api.delivery_service_api.custom_validation.INotEmpty;
 import com.api.delivery_service_api.custom_validation.ISave;
@@ -44,6 +45,7 @@ public class User implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "city_id")
+    @ICity(message = "Cidade inválida.", groups = {ISave.class})
     private City city;
 
     @Column(name = "zip_code")

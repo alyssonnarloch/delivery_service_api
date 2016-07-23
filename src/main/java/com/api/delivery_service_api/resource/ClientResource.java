@@ -17,6 +17,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
@@ -125,9 +126,88 @@ public class ClientResource {
 
         try {
             s.save(client);
-            
+
             s.flush();
-            s.clear();            
+            s.clear();
+            t.commit();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
+
+        return Response.ok(gson.toJson(errors)).build();
+    }
+
+    @PUT
+    @Path("/edit")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(@FormParam("id") int id,
+            @FormParam("name") String name,
+            @FormParam("email") String email,
+            @FormParam("phone") String phone,
+            @FormParam("zipcode") String zipCode,
+            @FormParam("city_id") int cityId,
+            @FormParam("address") String address,
+            @FormParam("number") int number,
+            @FormParam("profile_image") String profileImage) {
+
+        Gson gson = new Gson();
+
+        HashMap<String, String> errors = new HashMap();
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        try {
+            Client client = (Client) s.get(Client.class, id);
+
+            if (client == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Cliente não encontrado.").build();
+            }
+
+            client.setName(name);
+            client.setEmail(email);
+            client.setPhone(phone);
+            client.setZipCode(zipCode);
+
+            City city = new City(cityId);
+            client.setCity(city);
+
+            client.setAddress(address);
+            client.setNumber(number);
+            //client.setPassword(password);
+            client.setProfileImage(profileImage);
+
+            Set<ConstraintViolation<Client>> constraintViolations = validator.validate(client, ISave.class);
+
+            for (ConstraintViolation<Client> c : constraintViolations) {
+                String attrName = c.getPropertyPath().toString();
+
+                if (attrName != null && attrName.isEmpty()) {
+                    attrName = c.getRootBeanClass().getSimpleName();
+                }
+
+                if (errors.get(attrName) != null) {
+                    errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+                } else {
+                    errors.put(attrName, c.getMessage());
+                }
+            }
+
+            if (errors.size() > 0) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
+            }
+
+            s.update(client);
+
+            s.flush();
+            s.clear();
             t.commit();
         } catch (Exception ex) {
             t.rollback();
