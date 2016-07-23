@@ -2,6 +2,7 @@ package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.ProjectPortfolio;
+import com.google.gson.Gson;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -11,8 +12,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 @Path("project_portfolio")
 public class ProjectPortfolioResource {
@@ -51,6 +54,36 @@ public class ProjectPortfolioResource {
         }
     }
 
+    @GET
+    @Path("/project")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getByProjectId(@QueryParam("project_id") int projectId) {
+        
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            Criteria criteria = s.createCriteria(ProjectPortfolio.class, "pp")
+                    .add(Restrictions.eq("pp.projectId", projectId));
+
+            //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
+            String projectsJson = gson.toJson(criteria.list());
+
+            s.clear();
+            t.commit();
+
+            return Response.ok(projectsJson).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
+    }
+    
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     public Response approveRejectImage(@QueryParam("project_portfolio_id") int projectPortfolioId,
