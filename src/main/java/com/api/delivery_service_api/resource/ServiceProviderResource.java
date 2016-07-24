@@ -1,6 +1,8 @@
 package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.custom_validation.ISave;
+import com.api.delivery_service_api.custom_validation.IUpdateMain;
+import com.api.delivery_service_api.custom_validation.IUpdateServices;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
 import com.api.delivery_service_api.model.Project;
@@ -11,6 +13,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -22,6 +25,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -64,7 +68,7 @@ public class ServiceProviderResource {
             Criteria criteria = s.createCriteria(Project.class, "p")
                     .createAlias("serviceProvider", "sp")
                     .createAlias("sp.occupationAreas", "oa")
-                    .createAlias("sp.servicesType", "st")
+                    .createAlias("sp.serviceTypes", "st")
                     .setProjection(Projections.projectionList()
                             .add(Projections.property("sp.name"), "name")
                             .add(Projections.groupProperty("sp.id"), "id")
@@ -144,6 +148,154 @@ public class ServiceProviderResource {
         }
     }
 
+    @PUT
+    @Path("/edit/main")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editMain(@FormParam("id") int id,
+            @FormParam("name") String name,
+            @FormParam("email") String email,
+            @FormParam("phone") String phone,
+            @FormParam("zipcode") String zipCode,
+            @FormParam("city_id") int cityId,
+            @FormParam("address") String address,
+            @FormParam("number") int number,
+            @FormParam("profile_image") String profileImage) {
+
+        Gson gson = new Gson();
+
+        HashMap<String, String> errors = new HashMap();
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        try {
+            ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
+
+            if (serviceProvider == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Prestador de serviços não encontrado.").build();
+            }
+
+            serviceProvider.setName(name);
+            serviceProvider.setEmail(email);
+            serviceProvider.setPhone(phone);
+            serviceProvider.setZipCode(zipCode);
+
+            City city = new City(cityId);
+            serviceProvider.setCity(city);
+
+            serviceProvider.setAddress(address);
+            serviceProvider.setNumber(number);
+            serviceProvider.setProfileImage(profileImage);
+
+            Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider, IUpdateMain.class);
+
+            for (ConstraintViolation<ServiceProvider> c : constraintViolations) {
+                String attrName = c.getPropertyPath().toString();
+
+                if (attrName != null && attrName.isEmpty()) {
+                    attrName = c.getRootBeanClass().getSimpleName();
+                }
+
+                if (errors.get(attrName) != null) {
+                    errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+                } else {
+                    errors.put(attrName, c.getMessage());
+                }
+            }
+
+            if (errors.size() > 0) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
+            }
+
+            s.update(serviceProvider);
+
+            s.flush();
+            s.clear();
+            t.commit();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Path("/edit/services")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editServices(@FormParam("id") int id,
+            @FormParam("service_type") List<Integer> serviceTypesId,
+            @FormParam("experience_description") String experienceDescription,
+            @FormParam("available") boolean available) {
+
+        Gson gson = new Gson();
+
+        HashMap<String, String> errors = new HashMap();
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        try {
+            ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
+
+            if (serviceProvider == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Prestador de serviços não encontrado.").build();
+            }
+
+            serviceProvider.setServiceTypeIds(serviceTypesId);
+            serviceProvider.setExperienceDescription(experienceDescription);
+            serviceProvider.setAvailable(available);
+
+            Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider, IUpdateServices.class);
+
+            for (ConstraintViolation<ServiceProvider> c : constraintViolations) {
+                String attrName = c.getPropertyPath().toString();
+
+                if (attrName != null && attrName.isEmpty()) {
+                    attrName = c.getRootBeanClass().getSimpleName();
+                }
+
+                if (errors.get(attrName) != null) {
+                    errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+                } else {
+                    errors.put(attrName, c.getMessage());
+                }
+            }
+
+            if (errors.size() > 0) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
+            }
+
+            serviceProvider.setserviceTypes(new HashSet());
+            for (int serviceTypeId : serviceTypesId) {
+                serviceProvider.addServiceType(new ServiceType(serviceTypeId));
+            }
+
+            s.update(serviceProvider);
+
+            s.flush();
+            s.clear();
+            t.commit();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
+
+        return Response.ok().build();
+    }
+
     @POST
     @Path("/new")
     @Produces(MediaType.APPLICATION_JSON)
@@ -156,7 +308,7 @@ public class ServiceProviderResource {
             @FormParam("number") int number,
             @FormParam("password") String password,
             @FormParam("profile_image") String profileImage,
-            @FormParam("service_type") List<Integer> servicesTypeId,
+            @FormParam("service_type") List<Integer> serviceTypesId,
             @FormParam("experience_description") String experienceDescription,
             @FormParam("available") boolean available,
             @FormParam("occupation_area") List<Integer> occupationAreas,
@@ -182,7 +334,7 @@ public class ServiceProviderResource {
         serviceProvider.setNumber(number);
         serviceProvider.setPassword(password);
         serviceProvider.setProfileImage(profileImage);
-        serviceProvider.setServiceTypeIds(servicesTypeId);
+        serviceProvider.setServiceTypeIds(serviceTypesId);
         serviceProvider.setExperienceDescription(experienceDescription);
         serviceProvider.setAvailable(available);
         serviceProvider.setOccupationAreaIds(occupationAreas);
@@ -212,7 +364,7 @@ public class ServiceProviderResource {
         Transaction t = s.beginTransaction();
 
         try {
-            for (int serviceTypeId : servicesTypeId) {
+            for (int serviceTypeId : serviceTypesId) {
                 serviceProvider.addServiceType(new ServiceType(serviceTypeId));
             }
 

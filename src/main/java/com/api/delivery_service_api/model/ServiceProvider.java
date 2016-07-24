@@ -2,6 +2,7 @@ package com.api.delivery_service_api.model;
 
 import com.api.delivery_service_api.custom_validation.IListNotEmpty;
 import com.api.delivery_service_api.custom_validation.INotEmpty;
+import com.api.delivery_service_api.custom_validation.ISave;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,21 +24,21 @@ import javax.persistence.Transient;
 public class ServiceProvider extends User {
 
     @Column(name = "experience_description", length = 1500)
-    @INotEmpty(message = "A experiência deve ser informada.")
+    @INotEmpty(message = "A experiência deve ser informada.", groups = {ISave.class})
     private String experienceDescription;
     
     private boolean available;
 
     @Transient
-    @IListNotEmpty(message = "Os tipos de serviço devem ser informados.")
+    @IListNotEmpty(message = "Os tipos de serviço devem ser informados.", groups = {ISave.class})
     private List<Integer> serviceTypeIds;
 
     @Transient
-    @IListNotEmpty(message = "As áreas de atuação devem ser informadas.")
+    @IListNotEmpty(message = "As áreas de atuação devem ser informadas.", groups = {ISave.class})
     private List<Integer> occupationAreaIds;
 
     @Transient
-    @IListNotEmpty(message = "As imagens do portifólio devem ser adicionadas.")
+    @IListNotEmpty(message = "As imagens do portifólio devem ser adicionadas.", groups = {ISave.class})
     private List<String> profilePortfolioSrc;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -45,7 +46,7 @@ public class ServiceProvider extends User {
             name = "service_provider_service_types",
             joinColumns = @JoinColumn(name = "service_provider_id"),
             inverseJoinColumns = @JoinColumn(name = "service_type_id"))
-    private Set<ServiceType> servicesType;
+    private Set<ServiceType> serviceTypes;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -65,7 +66,7 @@ public class ServiceProvider extends User {
         this.serviceTypeIds = new ArrayList();
         this.occupationAreaIds = new ArrayList();
         this.profilePortfolioSrc = new ArrayList();
-        this.servicesType = new HashSet();
+        this.serviceTypes = new HashSet();
         this.occupationAreas = new HashSet();
         this.portfolio = new HashSet();
     }
@@ -75,7 +76,7 @@ public class ServiceProvider extends User {
         this.serviceTypeIds = new ArrayList();
         this.occupationAreaIds = new ArrayList();
         this.profilePortfolioSrc = new ArrayList();
-        this.servicesType = new HashSet();
+        this.serviceTypes = new HashSet();
         this.occupationAreas = new HashSet();
         this.portfolio = new HashSet();
     }
@@ -124,12 +125,12 @@ public class ServiceProvider extends User {
         this.profilePortfolioSrc = profilePortfolioSrc;
     }
 
-    public Set<ServiceType> getServicesType() {
-        return servicesType;
+    public Set<ServiceType> getserviceTypes() {
+        return serviceTypes;
     }
 
-    public void setServicesType(Set<ServiceType> servicesType) {
-        this.servicesType = servicesType;
+    public void setserviceTypes(Set<ServiceType> serviceTypes) {
+        this.serviceTypes = serviceTypes;
     }
 
     public Set<City> getOccupationAreas() {
@@ -157,7 +158,7 @@ public class ServiceProvider extends User {
     }
 
     public void addServiceType(ServiceType serviceType) {
-        this.servicesType.add(serviceType);
+        this.serviceTypes.add(serviceType);
     }
 
     public void addOccupationArea(City city) {

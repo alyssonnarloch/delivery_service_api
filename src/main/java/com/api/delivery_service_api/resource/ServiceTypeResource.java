@@ -40,12 +40,12 @@ public class ServiceTypeResource {
             Criteria criteria = s.createCriteria(ServiceType.class)
                     .addOrder(Order.asc("name"));
 
-            List<ServiceType> servicesType = criteria.list();
+            List<ServiceType> serviceTypes = criteria.list();
 
             s.clear();
             t.commit();
 
-            return Response.ok(gson.toJson(servicesType)).build();
+            return Response.ok(gson.toJson(serviceTypes)).build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();

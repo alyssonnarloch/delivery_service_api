@@ -4,6 +4,7 @@ import com.api.delivery_service_api.custom_validation.ICity;
 import com.api.delivery_service_api.custom_validation.IEmail;
 import com.api.delivery_service_api.custom_validation.INotEmpty;
 import com.api.delivery_service_api.custom_validation.ISave;
+import com.api.delivery_service_api.custom_validation.IUpdateMain;
 import com.api.delivery_service_api.custom_validation.IUserNotExists;
 import com.api.delivery_service_api.custom_validation.IZipCode;
 import java.io.Serializable;
@@ -25,42 +26,43 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "users")
 @DiscriminatorColumn(name = "profile_id", discriminatorType = DiscriminatorType.INTEGER)
-@IUserNotExists(message = "E-mail já utilizado por outro usuário.", groups = {ISave.class})
+@IUserNotExists(message = "E-mail já utilizado por outro usuário.", groups = {ISave.class, IUpdateMain.class})
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @INotEmpty(message = "O nome deve ser informado.", groups = {ISave.class})
-    @Size(min = 5, message = "Nome inválido.", groups = {ISave.class})
+    @INotEmpty(message = "O nome deve ser informado.", groups = {ISave.class, IUpdateMain.class})
+    @Size(min = 5, message = "Nome inválido.", groups = {ISave.class, IUpdateMain.class})
     private String name;
 
-    @INotEmpty(message = "O e-mail deve ser informado.", groups = {ISave.class})
-    @IEmail(message = "E-mail inválido.", groups = {ISave.class})
+    @INotEmpty(message = "O e-mail deve ser informado.", groups = {ISave.class, IUpdateMain.class})
+    @IEmail(message = "E-mail inválido.", groups = {ISave.class, IUpdateMain.class})
     private String email;
 
-    @INotEmpty(message = "O telefone deve ser informado.", groups = {ISave.class})
+    @INotEmpty(message = "O telefone deve ser informado.", groups = {ISave.class, IUpdateMain.class})
     private String phone;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
-    @ICity(message = "Cidade inválida.", groups = {ISave.class})
+    @ICity(message = "Cidade inválida.", groups = {ISave.class, IUpdateMain.class})
     private City city;
 
     @Column(name = "zip_code")
-    @INotEmpty(message = "O CEP deve ser informado.", groups = {ISave.class})
-    @IZipCode(message = "CEP inválido.", groups = {ISave.class})
+    @INotEmpty(message = "O CEP deve ser informado.", groups = {ISave.class, IUpdateMain.class})
+    @IZipCode(message = "CEP inválido.", groups = {ISave.class, IUpdateMain.class})
     private String zipCode;
 
-    @INotEmpty(message = "O endereço deve ser informado.", groups = {ISave.class})
-    @Size(min = 5, message = "Endereço inválido.", groups = {ISave.class})
+    @INotEmpty(message = "O endereço deve ser informado.", groups = {ISave.class, IUpdateMain.class})
+    @Size(min = 5, message = "Endereço inválido.", groups = {ISave.class, IUpdateMain.class})
     private String address;
 
-    @Min(value = 1, message = "Número inválido.", groups = {ISave.class})
+    @Min(value = 1, message = "Número inválido.", groups = {ISave.class, IUpdateMain.class})
     private int number;
 
     @Column(name = "profile_image", length = 1500)
+    @INotEmpty(message = "A imagem do perfil deve ser informada.", groups = {ISave.class, IUpdateMain.class})
     private String profileImage;
 
     @INotEmpty(message = "A senha deve ser informada.", groups = {ISave.class})

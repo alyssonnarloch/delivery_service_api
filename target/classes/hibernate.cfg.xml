@@ -14,6 +14,7 @@
     <mapping class="com.api.delivery_service_api.model.ProjectPortfolio"/>
     <mapping class="com.api.delivery_service_api.model.ProjectStatus"/>
     <mapping class="com.api.delivery_service_api.model.ServiceProvider"/>
+    <mapping class="com.api.delivery_service_api.model.ServiceProviderServiceType"/>
     <mapping class="com.api.delivery_service_api.model.ClientServiceProviderFavorite"/>
     <mapping class="com.api.delivery_service_api.model.ServiceProviderPortfolio"/>
     <mapping class="com.api.delivery_service_api.model.ServiceType"/>
