@@ -1,7 +1,9 @@
 package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.custom_validation.ISave;
+import com.api.delivery_service_api.custom_validation.IUpdateAreas;
 import com.api.delivery_service_api.custom_validation.IUpdateMain;
+import com.api.delivery_service_api.custom_validation.IUpdatePortfolio;
 import com.api.delivery_service_api.custom_validation.IUpdateServices;
 import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
@@ -32,6 +34,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
@@ -278,6 +281,146 @@ public class ServiceProviderResource {
             serviceProvider.setserviceTypes(new HashSet());
             for (int serviceTypeId : serviceTypesId) {
                 serviceProvider.addServiceType(new ServiceType(serviceTypeId));
+            }
+
+            s.update(serviceProvider);
+
+            s.flush();
+            s.clear();
+            t.commit();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
+
+        return Response.ok().build();
+    }
+    
+    @PUT
+    @Path("/edit/areas")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editAreas(@FormParam("id") int id,
+            @FormParam("occupation_area") List<Integer> occupationAreas) {
+
+        Gson gson = new Gson();
+
+        HashMap<String, String> errors = new HashMap();
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        try {
+            ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
+
+            if (serviceProvider == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Prestador de serviços não encontrado.").build();
+            }
+
+            serviceProvider.setOccupationAreaIds(occupationAreas);
+
+            Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider, IUpdateAreas.class);
+
+            for (ConstraintViolation<ServiceProvider> c : constraintViolations) {
+                String attrName = c.getPropertyPath().toString();
+
+                if (attrName != null && attrName.isEmpty()) {
+                    attrName = c.getRootBeanClass().getSimpleName();
+                }
+
+                if (errors.get(attrName) != null) {
+                    errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+                } else {
+                    errors.put(attrName, c.getMessage());
+                }
+            }
+
+            if (errors.size() > 0) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
+            }
+
+            serviceProvider.setOccupationAreas(new HashSet());
+            for (int occupationAreaId : occupationAreas) {
+                serviceProvider.addOccupationArea(new City(occupationAreaId));
+            }
+
+            s.update(serviceProvider);
+
+            s.flush();
+            s.clear();
+            t.commit();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
+
+        return Response.ok().build();
+    }
+    
+    @PUT
+    @Path("/edit/portfolio")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editPortfolio(@FormParam("id") int id,
+            @FormParam("profile_portfolio") List<String> profilePortfolio) {
+
+        Gson gson = new Gson();
+
+        HashMap<String, String> errors = new HashMap();
+        Validator validator;
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        try {
+            ServiceProvider serviceProvider = (ServiceProvider) s.get(ServiceProvider.class, id);
+
+            if (serviceProvider == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Prestador de serviços não encontrado.").build();
+            }
+
+            serviceProvider.setProfilePortfolioSrc(profilePortfolio);
+
+            Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider, IUpdatePortfolio.class);
+
+            for (ConstraintViolation<ServiceProvider> c : constraintViolations) {
+                String attrName = c.getPropertyPath().toString();
+
+                if (attrName != null && attrName.isEmpty()) {
+                    attrName = c.getRootBeanClass().getSimpleName();
+                }
+
+                if (errors.get(attrName) != null) {
+                    errors.put(attrName, errors.get(attrName) + "/" + c.getMessage());
+                } else {
+                    errors.put(attrName, c.getMessage());
+                }
+            }
+
+            if (errors.size() > 0) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
+            }
+
+            Query query = s.createQuery("DELETE FROM ServiceProviderPortfolio WHERE service_provider_id = :service_provider_id");
+            query.setInteger("service_provider_id", id);
+            query.executeUpdate();
+            
+            serviceProvider.setPortfolio(new HashSet());
+            for (String image : profilePortfolio) {
+                ServiceProviderPortfolio serviceProviderPortfolio = new ServiceProviderPortfolio();
+                serviceProviderPortfolio.setImage(image);
+                serviceProviderPortfolio.setServiceProviderId(id);
+                
+                serviceProvider.addPortfolio(serviceProviderPortfolio);
             }
 
             s.update(serviceProvider);

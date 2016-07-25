@@ -3,6 +3,9 @@ package com.api.delivery_service_api.model;
 import com.api.delivery_service_api.custom_validation.IListNotEmpty;
 import com.api.delivery_service_api.custom_validation.INotEmpty;
 import com.api.delivery_service_api.custom_validation.ISave;
+import com.api.delivery_service_api.custom_validation.IUpdateAreas;
+import com.api.delivery_service_api.custom_validation.IUpdatePortfolio;
+import com.api.delivery_service_api.custom_validation.IUpdateServices;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,15 +33,15 @@ public class ServiceProvider extends User {
     private boolean available;
 
     @Transient
-    @IListNotEmpty(message = "Os tipos de serviço devem ser informados.", groups = {ISave.class})
+    @IListNotEmpty(message = "Os tipos de serviço devem ser informados.", groups = {ISave.class, IUpdateServices.class})
     private List<Integer> serviceTypeIds;
 
     @Transient
-    @IListNotEmpty(message = "As áreas de atuação devem ser informadas.", groups = {ISave.class})
+    @IListNotEmpty(message = "As áreas de atuação devem ser informadas.", groups = {ISave.class, IUpdateAreas.class})
     private List<Integer> occupationAreaIds;
 
     @Transient
-    @IListNotEmpty(message = "As imagens do portifólio devem ser adicionadas.", groups = {ISave.class})
+    @IListNotEmpty(message = "As imagens do portifólio devem ser adicionadas.", groups = {ISave.class, IUpdatePortfolio.class})
     private List<String> profilePortfolioSrc;
 
     @ManyToMany(fetch = FetchType.EAGER)
