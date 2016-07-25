@@ -8,8 +8,8 @@ public class Token {
 
     public final static String SECRET_KEY_AUTH = "aBH0gO6Ph3lGs4qF0ba5pen55W1f1W9i";
     public final static String SECRET_KEY_REQ = "4BJQ61oVd9uw75V4fNXnYLBnxI6mx789";
-    public final static long TIMEOUT_MS_AUTH = 5000;
-    public final static long TIMEOUT_MS_REQ = 100000;
+    public final static long TIMEOUT_MS_AUTH = 99999999;
+    public final static long TIMEOUT_MS_REQ = 99999999;
 
     private String token;
 

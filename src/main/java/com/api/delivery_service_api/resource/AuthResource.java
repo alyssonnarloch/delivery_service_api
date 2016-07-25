@@ -24,26 +24,30 @@ public class AuthResource {
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     public Response authenticate(@FormParam("token") String token) {
-        Token tokenAux = new Token(token);
-        
-        long currentTimeMS = System.currentTimeMillis();
 
-        String userEmail = tokenAux.getClaim("email", Token.SECRET_KEY_AUTH).toString();
-        String userPassword = tokenAux.getClaim("password", Token.SECRET_KEY_AUTH).toString();
-        long expireTime = (long) tokenAux.getClaim("expireTime", Token.SECRET_KEY_AUTH);
+        try {
+            Token tokenAux = new Token(token);
 
-        if (currentTimeMS > expireTime) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Credencial inválida.").build();
-        } else {
-            Auth auth = new Auth(userEmail, userPassword);
-            int userId = auth.getUserId();
+            long currentTimeMS = System.currentTimeMillis();
 
-            if (userId > 0) {
-                return Response.ok(tokenAux.generateForRequest(userId)).build();
+            String userEmail = tokenAux.getClaim("email", Token.SECRET_KEY_AUTH).toString();
+            String userPassword = tokenAux.getClaim("password", Token.SECRET_KEY_AUTH).toString();
+            long expireTime = (long) tokenAux.getClaim("expireTime", Token.SECRET_KEY_AUTH);
+
+            if (currentTimeMS > expireTime) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Credencial inválida.").build();
+            } else {
+                Auth auth = new Auth(userEmail, userPassword);
+                int userId = auth.getUserId();
+
+                if (userId > 0) {
+                    return Response.ok(tokenAux.generateForRequest(userId)).build();
+                }
+
+                return Response.status(Response.Status.UNAUTHORIZED).entity("E-mail ou senha inválidos.").build();
             }
-
-            return Response.status(Response.Status.UNAUTHORIZED).entity("E-mail ou senha inválidos.").build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Token inválido.").build();
         }
     }
-
 }
