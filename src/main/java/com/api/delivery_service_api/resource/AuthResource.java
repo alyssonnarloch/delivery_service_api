@@ -33,7 +33,7 @@ public class AuthResource {
             String userEmail = tokenAux.getClaim("email", Token.SECRET_KEY_AUTH).toString();
             String userPassword = tokenAux.getClaim("password", Token.SECRET_KEY_AUTH).toString();
             long expireTime = (long) tokenAux.getClaim("expireTime", Token.SECRET_KEY_AUTH);
-
+            
             if (currentTimeMS > expireTime) {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Credencial inválida.").build();
             } else {
