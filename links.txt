@@ -32,3 +32,7 @@ Hibernate Validator
 Ignore Validation
 	http://in.relation.to/2008/04/10/bean-validation-sneak-peek-part-iii-groups-and-partial-validation/
 	http://stackoverflow.com/questions/4533130/using-hibernate-validator-without-calling-annotation
+
+Android Menu
+	https://android-arsenal.com/details/1/1617
+	https://developer.android.com/training/implementing-navigation/nav-drawer.html
