@@ -22,6 +22,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
@@ -441,6 +442,7 @@ public class ServiceProviderResource {
 
     @POST
     @Path("/new")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(@FormParam("name") String name,
             @FormParam("email") String email,
@@ -451,11 +453,11 @@ public class ServiceProviderResource {
             @FormParam("number") int number,
             @FormParam("password") String password,
             @FormParam("profile_image") String profileImage,
-            @FormParam("service_type") List<Integer> serviceTypesId,
+            @FormParam("service_type[]") List<Integer> serviceTypesId,
             @FormParam("experience_description") String experienceDescription,
             @FormParam("available") boolean available,
-            @FormParam("occupation_area") List<Integer> occupationAreas,
-            @FormParam("profile_portfolio") List<String> profilePortfolio) {
+            @FormParam("occupation_area[]") List<Integer> occupationAreas,
+            @FormParam("profile_portfolio[]") List<String> profilePortfolio) {
 
         Gson gson = new Gson();
 
@@ -515,12 +517,16 @@ public class ServiceProviderResource {
                 serviceProvider.addOccupationArea(new City(occupationAreaId));
             }
 
-            for (String image : profilePortfolio) {
-                serviceProvider.addPortfolio(new ServiceProviderPortfolio(image));
-            }
-
             s.save(serviceProvider);
 
+            for (String image : profilePortfolio) {
+                ServiceProviderPortfolio serviceProviderPortfolio = new ServiceProviderPortfolio();
+                serviceProviderPortfolio.setServiceProviderId(serviceProvider.getId());
+                serviceProviderPortfolio.setImage(image);
+
+                s.save(serviceProviderPortfolio);
+            }
+            
             s.flush();
             s.clear();
             t.commit();

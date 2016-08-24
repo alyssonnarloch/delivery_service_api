@@ -5,6 +5,7 @@ com\api\delivery_service_api\hibernate\HibernateUtil.class
 com\api\delivery_service_api\custom_validation\ClientValidator.class
 com\api\delivery_service_api\resource\ClientResource.class
 com\api\delivery_service_api\custom_validation\NotEmptyValidator.class
+com\api\delivery_service_api\resource\TestResource.class
 com\api\delivery_service_api\resource\ProjectPortfolioResource.class
 com\api\delivery_service_api\custom_validation\IDatePeriod.class
 com\api\delivery_service_api\custom_validation\IEmail.class
@@ -19,6 +20,7 @@ com\api\delivery_service_api\custom_validation\ICity.class
 com\api\delivery_service_api\custom_validation\CityValidator.class
 com\api\delivery_service_api\model\ProjectStatus.class
 com\api\delivery_service_api\extras\Extra.class
+com\api\delivery_service_api\model\Task.class
 com\api\delivery_service_api\custom_validation\IZipCode.class
 com\api\delivery_service_api\model\ServiceProviderPortfolio.class
 com\api\delivery_service_api\custom_validation\IUpdateAreas.class

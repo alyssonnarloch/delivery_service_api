@@ -11,6 +11,8 @@ D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_a
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\hibernate\HibernateUtil.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\ServiceProviderResource.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\EmailValidator.java
+D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\Task.java
+D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\resource\TestResource.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\IEmail.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\custom_validation\UserNotExistsValidator.java
 D:\Projetos\github\delivery_service_api\src\main\java\com\api\delivery_service_api\model\User.java

@@ -113,6 +113,7 @@ public class ClientServiceProviderFavoriteResource {
     }
 
     @POST
+    @Path("/new")
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(@FormParam("client_id") int clientId,
             @FormParam("service_provider_id") int serviceProviderId) {
@@ -148,7 +149,7 @@ public class ClientServiceProviderFavoriteResource {
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") int id) {
         if (id == 0) {

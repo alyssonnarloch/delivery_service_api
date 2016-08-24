@@ -46,7 +46,7 @@ public class CityResource {
             Criteria criteria = s.createCriteria(City.class, "c")
                     .add(Restrictions.like("c.name", partName, MatchMode.ANYWHERE))
                     .addOrder(Order.asc("name"))
-                    .setMaxResults(10);
+                    .setMaxResults(5);
 
             List<City> cities = criteria.list();
 
