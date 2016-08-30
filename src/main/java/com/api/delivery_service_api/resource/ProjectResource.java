@@ -30,6 +30,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -141,7 +142,7 @@ public class ProjectResource {
             }
 
             //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
-            String projectsJson = gson.toJson(criteria.list());
+            String projectsJson = gson.toJson(criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());
 
             s.clear();
             t.commit();
@@ -177,7 +178,7 @@ public class ProjectResource {
             }
 
             //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
-            String projectsJson = gson.toJson(criteria.list());
+            String projectsJson = gson.toJson(criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());
 
             s.clear();
             t.commit();

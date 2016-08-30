@@ -52,4 +52,22 @@ public class Auth {
         
         return user.getId();
     }
+    
+    public User getUser() {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        Query query = s.createQuery("FROM User WHERE email = :email AND password = :password");
+        query.setString("email", this.getEmail());
+        query.setString("password", this.getPassword());
+        query.setMaxResults(1);
+
+        User user = (User) query.uniqueResult();
+
+        t.commit();
+        s.flush();
+        s.close();
+        
+        return user;
+    }
 }

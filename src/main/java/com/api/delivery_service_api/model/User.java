@@ -66,7 +66,7 @@ public class User implements Serializable {
     private String profileImage;
 
     @INotEmpty(message = "A senha deve ser informada.", groups = {ISave.class})
-    @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres.", groups = {ISave.class})
+    @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres.", groups = {ISave.class})
     private String password;
 
     public User() {
