@@ -39,7 +39,7 @@ public class ClientServiceProviderFavoriteResource {
     public Response getServiceProvider(@PathParam("client_id") int clientId) {
 
         if (clientId == 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("CÃ³digo do cliente invÃ¡lido.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente inválido.").build();
         }
 
         Session s = HibernateUtil.getSessionFactory().openSession();
@@ -77,7 +77,7 @@ public class ClientServiceProviderFavoriteResource {
             @PathParam("service_provider_id") int serviceProviderId) {
 
         if (clientId == 0 || serviceProviderId == 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("CÃ³digo do cliente ou prestador de serviÃ§os invÃ¡lido.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente ou prestador de serviços inválido.").build();
         }
 
         Session s = HibernateUtil.getSessionFactory().openSession();
@@ -99,7 +99,7 @@ public class ClientServiceProviderFavoriteResource {
             t.commit();
 
             if (favorites.isEmpty()) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("CÃ³digo do cliente ou prestador de serviÃ§os invÃ¡lido.").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente ou prestador de serviços inválido.").build();
             }
 
             return Response.ok(gson.toJson(favorites.get(0))).build();
@@ -172,7 +172,7 @@ public class ClientServiceProviderFavoriteResource {
         } catch (IllegalArgumentException iex) {
             t.rollback();
             iex.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Prestador de serviÃ§os favorito nÃ£o encontrado ou jÃ¡ foi excluÃ­do.").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Prestador de serviços favorito não encontrado ou já foi excluído.").build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();

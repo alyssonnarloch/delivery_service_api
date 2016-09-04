@@ -109,7 +109,7 @@ public class ProjectResource {
         } catch (ConstraintViolationException cve) {
             t.rollback();
             cve.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviÃ§os ou Cidade invÃ¡lidos.").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Cliente, Prestador de serviços ou Cidade inválidos.").build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -211,8 +211,8 @@ public class ProjectResource {
                     .add(Restrictions.isNotNull("p.serviceProviderEvaluation"))
                     .add(Restrictions.isNotNull("p.serviceProviderQualification"));
 
-            //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
-            String projectsJson = gson.toJson(criteria.list());
+            //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response            
+            String projectsJson = gson.toJson(criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());
 
             s.clear();
             t.commit();
@@ -246,7 +246,7 @@ public class ProjectResource {
                     .add(Restrictions.isNotNull("p.clientQualification"));
 
             //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
-            String projectsJson = gson.toJson(criteria.list());
+            String projectsJson = gson.toJson(criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());            
 
             s.clear();
             t.commit();
