@@ -39,7 +39,7 @@ public class ClientServiceProviderFavoriteResource {
     public Response getServiceProvider(@PathParam("client_id") int clientId) {
 
         if (clientId == 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente inválido.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("CÃ³digo do cliente invÃ¡lido.").build();
         }
 
         Session s = HibernateUtil.getSessionFactory().openSession();
@@ -77,7 +77,7 @@ public class ClientServiceProviderFavoriteResource {
             @PathParam("service_provider_id") int serviceProviderId) {
 
         if (clientId == 0 || serviceProviderId == 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente ou prestador de serviços inválido.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("CÃ³digo do cliente ou prestador de serviÃ§os invÃ¡lido.").build();
         }
 
         Session s = HibernateUtil.getSessionFactory().openSession();
@@ -99,7 +99,7 @@ public class ClientServiceProviderFavoriteResource {
             t.commit();
 
             if (favorites.isEmpty()) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente ou prestador de serviços inválido.").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("CÃ³digo do cliente ou prestador de serviÃ§os invÃ¡lido.").build();
             }
 
             return Response.ok(gson.toJson(favorites.get(0))).build();
@@ -118,6 +118,8 @@ public class ClientServiceProviderFavoriteResource {
     public Response save(@FormParam("client_id") int clientId,
             @FormParam("service_provider_id") int serviceProviderId) {
 
+        Gson gson = new Gson();
+        
         if (clientId == 0 || serviceProviderId == 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente ou prestador de serviços inválido.").build();
         }
@@ -137,6 +139,8 @@ public class ClientServiceProviderFavoriteResource {
             s.flush();
             s.clear();
             t.commit();
+            
+            return Response.ok().entity(gson.toJson(favorite)).build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
@@ -144,8 +148,6 @@ public class ClientServiceProviderFavoriteResource {
         } finally {
             s.close();
         }
-
-        return Response.ok().build();
     }
 
     @DELETE
@@ -153,7 +155,7 @@ public class ClientServiceProviderFavoriteResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") int id) {
         if (id == 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Id inválido.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Id invÃ¡lido.").build();
         }
 
         Session s = HibernateUtil.getSessionFactory().openSession();
@@ -170,7 +172,7 @@ public class ClientServiceProviderFavoriteResource {
         } catch (IllegalArgumentException iex) {
             t.rollback();
             iex.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Prestador de serviços favorito não encontrado ou já foi excluído.").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Prestador de serviÃ§os favorito nÃ£o encontrado ou jÃ¡ foi excluÃ­do.").build();
         } catch (Exception ex) {
             t.rollback();
             ex.printStackTrace();
