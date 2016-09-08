@@ -26,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -246,7 +247,7 @@ public class ProjectResource {
                     .add(Restrictions.isNotNull("p.clientQualification"));
 
             //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
-            String projectsJson = gson.toJson(criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());            
+            String projectsJson = gson.toJson(criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());
 
             s.clear();
             t.commit();
@@ -330,5 +331,38 @@ public class ProjectResource {
         }
 
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getById(@PathParam("id") int id) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        //Evita atualização automática das entidades
+        //s.setFlushMode(FlushMode.MANUAL);
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            Project project = (Project) s.get(Project.class, id);
+
+            if (project == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Não existe projeto associado ao id " + id + ".").build();
+            }
+
+            if (!t.isActive()) {
+                s.clear();
+                t.commit();
+            }
+
+            return Response.ok(gson.toJson(project)).build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            t.rollback();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
     }
 }

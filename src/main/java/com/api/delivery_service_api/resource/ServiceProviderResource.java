@@ -299,7 +299,7 @@ public class ServiceProviderResource {
 
         return Response.ok().build();
     }
-    
+
     @PUT
     @Path("/edit/areas")
     @Produces(MediaType.APPLICATION_JSON)
@@ -365,7 +365,7 @@ public class ServiceProviderResource {
 
         return Response.ok().build();
     }
-    
+
     @PUT
     @Path("/edit/portfolio")
     @Produces(MediaType.APPLICATION_JSON)
@@ -414,13 +414,13 @@ public class ServiceProviderResource {
             Query query = s.createQuery("DELETE FROM ServiceProviderPortfolio WHERE service_provider_id = :service_provider_id");
             query.setInteger("service_provider_id", id);
             query.executeUpdate();
-            
+
             serviceProvider.setPortfolio(new HashSet());
             for (String image : profilePortfolio) {
                 ServiceProviderPortfolio serviceProviderPortfolio = new ServiceProviderPortfolio();
                 serviceProviderPortfolio.setImage(image);
                 serviceProviderPortfolio.setServiceProviderId(id);
-                
+
                 serviceProvider.addPortfolio(serviceProviderPortfolio);
             }
 
@@ -526,7 +526,7 @@ public class ServiceProviderResource {
 
                 s.save(serviceProviderPortfolio);
             }
-            
+
             s.flush();
             s.clear();
             t.commit();
@@ -539,5 +539,34 @@ public class ServiceProviderResource {
         }
 
         return Response.ok(gson.toJson(errors)).build();
+    }
+
+    @GET
+    @Path("/portfolio/{service_provider_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPortfolio(@PathParam("service_provider_id") int serviceProviderId) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            String sql = "FROM ServiceProviderPortfolio WHERE service_provider_id = :service_provider_id";
+            Query query = s.createQuery(sql);
+            query.setInteger("service_provider_id", serviceProviderId);
+
+            List<ServiceProviderPortfolio> portfolio = query.list();
+
+            s.clear();
+            t.commit();
+
+            return Response.ok(gson.toJson(portfolio)).build();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
     }
 }
