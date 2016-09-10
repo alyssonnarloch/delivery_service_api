@@ -55,9 +55,10 @@ public class ServiceProviderResource {
 
     @POST
     @Path("/search")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(@FormParam("name") String name,
-            @FormParam("service_type") List<Integer> serviceTypeIds,
+            @FormParam("service_type[]") List<Integer> serviceTypeIds,
             @FormParam("city_id") int cityId,
             @FormParam("available") boolean available) {
 
@@ -232,9 +233,10 @@ public class ServiceProviderResource {
 
     @PUT
     @Path("/edit/services")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editServices(@FormParam("id") int id,
-            @FormParam("service_type") List<Integer> serviceTypesId,
+            @FormParam("service_type[]") List<Integer> serviceTypesId,
             @FormParam("experience_description") String experienceDescription,
             @FormParam("available") boolean available) {
 
@@ -302,9 +304,10 @@ public class ServiceProviderResource {
 
     @PUT
     @Path("/edit/areas")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editAreas(@FormParam("id") int id,
-            @FormParam("occupation_area") List<Integer> occupationAreas) {
+            @FormParam("occupation_area[]") List<Integer> occupationAreas) {
 
         Gson gson = new Gson();
 
@@ -368,9 +371,10 @@ public class ServiceProviderResource {
 
     @PUT
     @Path("/edit/portfolio")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editPortfolio(@FormParam("id") int id,
-            @FormParam("profile_portfolio") List<String> profilePortfolio) {
+            @FormParam("profile_portfolio[]") List<String> profilePortfolio) {
 
         Gson gson = new Gson();
 

@@ -63,7 +63,7 @@ public class ServiceProvider extends User {
     private Set<ServiceProviderPortfolio> portfolio;
 
     @Transient
-    private double qualificationAvg;
+    private Double qualificationAvg;
 
     public ServiceProvider() {
         this.serviceTypeIds = new ArrayList();
@@ -140,11 +140,11 @@ public class ServiceProvider extends User {
         return occupationAreas;
     }
 
-    public double getQualificationAvg() {
+    public Double getQualificationAvg() {
         return qualificationAvg;
     }
 
-    public void setQualificationAvg(double qualificationAvg) {
+    public void setQualificationAvg(Double qualificationAvg) {
         this.qualificationAvg = qualificationAvg;
     }
 
