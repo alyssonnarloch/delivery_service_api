@@ -70,15 +70,12 @@ public class ServiceProviderResource {
         Gson gson = new Gson();
 
         try {
-            Criteria criteria = s.createCriteria(Project.class, "p")
-                    .createAlias("serviceProvider", "sp")
+            Criteria criteria = s.createCriteria(ServiceProvider.class, "sp")
                     .createAlias("sp.occupationAreas", "oa")
                     .createAlias("sp.serviceTypes", "st")
                     .setProjection(Projections.projectionList()
                             .add(Projections.property("sp.name"), "name")
-                            .add(Projections.groupProperty("sp.id"), "id")
-                            .add(Projections.avg("p.serviceProviderQualification"), "qualificationAvg"))
-                    .addOrder(Order.desc("qualificationAvg"))
+                            .add(Projections.groupProperty("sp.id"), "id"))
                     .setResultTransformer(Transformers.aliasToBean(ServiceProvider.class));
 
             if (name != null && !name.equals("")) {
@@ -102,7 +99,6 @@ public class ServiceProviderResource {
 
             for (ServiceProvider serviceProvider : criteriaServiceProviders) {
                 ServiceProvider serviceProviderAux = (ServiceProvider) s.get(ServiceProvider.class, serviceProvider.getId());
-                serviceProviderAux.setQualificationAvg(serviceProvider.getQualificationAvg());
 
                 servicesProvider.add(serviceProviderAux);
             }

@@ -99,7 +99,7 @@ public class ClientServiceProviderFavoriteResource {
             t.commit();
 
             if (favorites.isEmpty()) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Código do cliente ou prestador de serviços inválido.").build();
+                return Response.ok(gson.toJson(null)).build();
             }
 
             return Response.ok(gson.toJson(favorites.get(0))).build();
