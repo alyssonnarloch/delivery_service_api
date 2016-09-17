@@ -11,7 +11,9 @@ import com.api.delivery_service_api.model.ProjectStatus;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.modelaux.Period;
 import com.google.gson.Gson;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -31,8 +33,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -204,10 +204,14 @@ public class ProjectResource {
 
         Gson gson = new Gson();
 
+        List<Integer> status = new ArrayList();
+        status.add(2);
+        status.add(4);
+        
         try {
             Criteria criteria = s.createCriteria(Project.class, "p")
                     .createAlias("status", "s")
-                    .add(Restrictions.eq("s.id", 4))
+                    .add(Restrictions.in("s.id", status))
                     .add(Restrictions.eq("p.serviceProvider.id", serviceProviderId))
                     .add(Restrictions.isNotNull("p.serviceProviderEvaluation"))
                     .add(Restrictions.isNotNull("p.serviceProviderQualification"));
@@ -238,10 +242,14 @@ public class ProjectResource {
 
         Gson gson = new Gson();
 
+                List<Integer> status = new ArrayList();
+        status.add(2);
+        status.add(4);
+        
         try {
             Criteria criteria = s.createCriteria(Project.class, "p")
                     .createAlias("status", "s")
-                    .add(Restrictions.eq("s.id", 4))
+                    .add(Restrictions.in("s.id", status))
                     .add(Restrictions.eq("p.client.id", clientId))
                     .add(Restrictions.isNotNull("p.clientEvaluation"))
                     .add(Restrictions.isNotNull("p.clientQualification"));
@@ -263,12 +271,13 @@ public class ProjectResource {
     }
 
     @PUT
-    @Path("/close")
+    @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@FormParam("project_id") int projectId,
             @FormParam("qualification") int qualification,
             @FormParam("description") String description,
-            @FormParam("profile_id") int profileId) {
+            @FormParam("profile_id") int profileId,
+            @FormParam("status") int status) {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
         //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
@@ -290,7 +299,7 @@ public class ProjectResource {
             }
 
             project.setPeriodDate(new Period(project.getStartAt(), project.getEndAt()));
-            project.setStatus(new ProjectStatus(4));
+            project.setStatus(new ProjectStatus(status));
 
             //Cliente
             if (profileId == 1) {
