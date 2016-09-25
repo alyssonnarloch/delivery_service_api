@@ -69,6 +69,9 @@ public class User implements Serializable {
     @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres.", groups = {ISave.class})
     private String password;
 
+    @Transient
+    private String profileId;
+
     public User() {
     }
 
@@ -152,10 +155,17 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    @Transient
     public String getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(String profileId) {
+        this.profileId = profileId;
+    }
+
+    @Transient
+    public String getProfileValue() {
         return this.getClass().getAnnotation(DiscriminatorValue.class).value();
     }
 
-   
 }

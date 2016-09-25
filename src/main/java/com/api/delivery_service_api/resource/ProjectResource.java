@@ -207,7 +207,7 @@ public class ProjectResource {
         List<Integer> status = new ArrayList();
         status.add(2);
         status.add(4);
-        
+
         try {
             Criteria criteria = s.createCriteria(Project.class, "p")
                     .createAlias("status", "s")
@@ -242,10 +242,10 @@ public class ProjectResource {
 
         Gson gson = new Gson();
 
-                List<Integer> status = new ArrayList();
+        List<Integer> status = new ArrayList();
         status.add(2);
         status.add(4);
-        
+
         try {
             Criteria criteria = s.createCriteria(Project.class, "p")
                     .createAlias("status", "s")
@@ -295,7 +295,7 @@ public class ProjectResource {
             Project project = (Project) s.get(Project.class, projectId);
 
             if (project == null) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto nÃ£o encontrado.").build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto não encontrado.").build();
             }
 
             project.setPeriodDate(new Period(project.getStartAt(), project.getEndAt()));
@@ -325,6 +325,43 @@ public class ProjectResource {
             if (errors.size() > 0) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errors)).build();
             }
+
+            s.update(project);
+
+            s.flush();
+            s.clear();
+            t.commit();
+        } catch (Exception ex) {
+            t.rollback();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } finally {
+            s.close();
+        }
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Path("/approve")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response approve(@FormParam("project_id") int projectId) {
+
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
+//        s.setFlushMode(FlushMode.MANUAL);
+        Transaction t = s.beginTransaction();
+
+        Gson gson = new Gson();
+
+        try {
+            Project project = (Project) s.get(Project.class, projectId);
+
+            if (project == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Projeto não encontrado.").build();
+            }
+
+            project.setStatus(new ProjectStatus(3));
 
             s.update(project);
 

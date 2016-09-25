@@ -64,6 +64,8 @@ public class AuthResource {
             User user = auth.getUser();
 
             if (user != null) {
+                user.setProfileId(user.getProfileValue());
+                user.setPassword("***********");
                 return Response.ok(gson.toJson(user)).build();
             }
 
