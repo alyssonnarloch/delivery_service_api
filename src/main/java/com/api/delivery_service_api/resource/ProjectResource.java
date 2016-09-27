@@ -280,7 +280,7 @@ public class ProjectResource {
             @FormParam("status") int status) {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
+        //Evita atualização automática das entidades
 //        s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
@@ -348,7 +348,7 @@ public class ProjectResource {
     public Response approve(@FormParam("project_id") int projectId) {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
-        //Evita atualizaÃ§Ã£o automÃ¡tica das entidades
+        //Evita atualização automática das entidades
 //        s.setFlushMode(FlushMode.MANUAL);
         Transaction t = s.beginTransaction();
 
