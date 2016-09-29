@@ -126,7 +126,7 @@ public class ProjectResource {
     @Path("/client")
     @Produces(MediaType.APPLICATION_JSON)
     public Response clientProjects(@QueryParam("client_id") int clientId,
-            @QueryParam("status") int status) {
+            @QueryParam("status[]") List<Integer> status) {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -138,8 +138,8 @@ public class ProjectResource {
                     .createAlias("status", "s")
                     .add(Restrictions.eq("p.client.id", clientId));
 
-            if (status > 0) {
-                criteria.add(Restrictions.eq("s.id", status));
+            if (status.size() > 0) {
+                criteria.add(Restrictions.in("s.id", status));
             }
 
             //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
@@ -162,7 +162,7 @@ public class ProjectResource {
     @Path("/service_provider")
     @Produces(MediaType.APPLICATION_JSON)
     public Response serviceProviderProjects(@QueryParam("service_provider_id") int serviceProviderId,
-            @QueryParam("status") int status) {
+            @QueryParam("status[]") List<Integer> status) {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
@@ -174,8 +174,8 @@ public class ProjectResource {
                     .createAlias("status", "s")
                     .add(Restrictions.eq("p.serviceProvider.id", serviceProviderId));
 
-            if (status > 0) {
-                criteria.add(Restrictions.eq("s.id", status));
+            if (status.size() > 0) {
+                criteria.add(Restrictions.in("s.id", status));
             }
 
             //Resolve problema "failed to lazily initialize a collection of role" quando converte a lista em json na geração do response
