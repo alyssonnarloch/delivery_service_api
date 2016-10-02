@@ -233,8 +233,7 @@ public class ServiceProviderResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response editServices(@FormParam("id") int id,
             @FormParam("service_type[]") List<Integer> serviceTypesId,
-            @FormParam("experience_description") String experienceDescription,
-            @FormParam("available") boolean available) {
+            @FormParam("experience_description") String experienceDescription) {
 
         Gson gson = new Gson();
 
@@ -254,8 +253,7 @@ public class ServiceProviderResource {
             }
 
             serviceProvider.setServiceTypeIds(serviceTypesId);
-            serviceProvider.setExperienceDescription(experienceDescription);
-            serviceProvider.setAvailable(available);
+            serviceProvider.setExperienceDescription(experienceDescription);            
 
             Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider, IUpdateServices.class);
 
@@ -303,7 +301,8 @@ public class ServiceProviderResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editAreas(@FormParam("id") int id,
-            @FormParam("occupation_area[]") List<Integer> occupationAreas) {
+            @FormParam("occupation_area[]") List<Integer> occupationAreas,
+            @FormParam("available") boolean available) {
 
         Gson gson = new Gson();
 
@@ -323,6 +322,7 @@ public class ServiceProviderResource {
             }
 
             serviceProvider.setOccupationAreaIds(occupationAreas);
+            serviceProvider.setAvailable(available);
 
             Set<ConstraintViolation<ServiceProvider>> constraintViolations = validator.validate(serviceProvider, IUpdateAreas.class);
 
