@@ -7,6 +7,7 @@ import com.api.delivery_service_api.hibernate.HibernateUtil;
 import com.api.delivery_service_api.model.City;
 import com.api.delivery_service_api.model.Client;
 import com.api.delivery_service_api.model.Project;
+import com.api.delivery_service_api.model.ProjectPortfolio;
 import com.api.delivery_service_api.model.ProjectStatus;
 import com.api.delivery_service_api.model.ServiceProvider;
 import com.api.delivery_service_api.modelaux.Period;
@@ -33,6 +34,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -310,6 +312,14 @@ public class ProjectResource {
                 project.setServiceProviderQualification(qualification);
             }
 
+            if (status == 4 && profileId == 2) {
+                for (int i = 0; i < project.getPortfolio().size(); i++) {
+                    if (project.getPortfolio().get(i).isApproved() == null) {
+                        project.getPortfolio().get(i).setApproved(false);
+                    }
+                }
+            }
+
             Set<ConstraintViolation<Project>> constraintViolations = validator.validate(project, IUpdate.class);
 
             for (ConstraintViolation<Project> c : constraintViolations) {
@@ -386,7 +396,7 @@ public class ProjectResource {
         Session s = HibernateUtil.getSessionFactory().openSession();
         //Evita atualização automática das entidades
         //s.setFlushMode(FlushMode.MANUAL);
-        Transaction t = s.beginTransaction();
+        //Transaction t = s.beginTransaction();
 
         Gson gson = new Gson();
 
@@ -397,18 +407,18 @@ public class ProjectResource {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Não existe projeto associado ao id " + id + ".").build();
             }
 
-            if (!t.isActive()) {
-                s.clear();
-                t.commit();
-            }
+            //if (!t.isActive()) {
+            //s.clear();
+            //t.commit();
+            //}
 
             return Response.ok(gson.toJson(project)).build();
         } catch (Exception ex) {
             ex.printStackTrace();
-            t.rollback();
+            //t.rollback();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         } finally {
-            s.close();
+            //s.close();
         }
     }
 }

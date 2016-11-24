@@ -4,7 +4,7 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://52.36.228.76:3306/delivery_service?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.url">jdbc:mysql://52.36.228.76:3306/delivery_service_2?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">aux_user@52.36.228.76</property>
     <property name="hibernate.connection.password">p@ss#ees%2015</property>
     <!--<property name="hibernate.hbm2ddl.auto">update</property>-->

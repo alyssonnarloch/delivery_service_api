@@ -1,10 +1,7 @@
 package com.api.delivery_service_api.resource;
 
 import com.api.delivery_service_api.hibernate.HibernateUtil;
-import com.api.delivery_service_api.model.Client;
-import com.api.delivery_service_api.model.ClientServiceProviderFavorite;
 import com.api.delivery_service_api.model.ProjectPortfolio;
-import com.api.delivery_service_api.model.ServiceProvider;
 import com.google.gson.Gson;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
